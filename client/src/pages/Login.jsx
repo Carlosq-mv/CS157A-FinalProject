@@ -1,6 +1,6 @@
-import React from 'react'
 import Axios from '../constants/api'
 import { useState } from 'react'
+import { FaArrowRight } from "react-icons/fa6";
 
 const Login = () => {
   // state to manage form inputs
@@ -37,21 +37,21 @@ const Login = () => {
   return (
     <>
       <div className="flex items-center justify-center min-h-screen">
-        <div className="card bg-base-100 w-full sm:w-2/6 shadow-xl " style={{ backgroundColor: '#606060' }}>
+        <div className="card bg-base-100 w-full sm:w-2/5 shadow-xl " style={{ backgroundColor: '#606060' }}>
           <figure className="px-8 pt-8">
             <img
               src="/images/college.jpg"
               alt="College"
-              className="rounded-xl"
+              className="rounded-2xl"
             />
           </figure>
 
           <div className="card-body items-center text-center">
-            <h2 className="card-title">Student Center</h2>
+            <h2 className="card-title text-3xl pb-10 font-abril">Student Center</h2>
             <form onSubmit={handleSubmit}>
-              <label className="form-control w-full max-w-xs">
+              <label className="form-control w-full max-w-xs pb-6">
                 <div className="label">
-                  <span className="label-text">AdminID</span>
+                  <span className="label-text font-black">AdminID</span>
                 </div>
                 <input
                   type="text"
@@ -63,7 +63,7 @@ const Login = () => {
               </label>
               <label className="form-control w-full ">
                 <div className="label">
-                  <span className="label-text">Password</span>
+                  <span className="label-text font-black">Password</span>
                 </div>
                 <input
                   type="password"
@@ -74,7 +74,7 @@ const Login = () => {
                 />
               </label>
               <div className="pt-10">
-                <button type="submit" className="btn btn-success">Login</button>
+                <button type="submit" className="btn btn-success text-lg">Login <FaArrowRight /></button>
               </div>
             </form>
           </div>

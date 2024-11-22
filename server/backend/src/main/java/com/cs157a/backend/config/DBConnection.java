@@ -8,8 +8,6 @@ import java.sql.Statement;
 public class DBConnection {
     private static DBConnection dbConnection = new DBConnection();
     private Connection mySqlConnection;
-    // NOTE: put password here
-    private static final String DB_PASSWORD = "DB_PASSWORD";
 
     private DBConnection() {
         mySqlConnection = connect();
@@ -26,7 +24,7 @@ public class DBConnection {
     // create a connection to MySql
     private Connection connect() {
         try {
-            return DriverManager.getConnection("jdbc:mysql://localhost:3306/StudentManagementSyst", "root", DB_PASSWORD);
+            return DriverManager.getConnection("jdbc:mysql://localhost:3306/StudentManagementSyst", "root", "3000");
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
