@@ -12,10 +12,10 @@ public class Constants {
     public final static String STUDENTS_TABLE = """
         CREATE TABLE IF NOT EXISTS Students (
             StudentID BIGINT AUTO_INCREMENT PRIMARY KEY,
-            Name VARCHAR(100),
-            DateOfBirth DATE,
-            Email VARCHAR(100) UNIQUE,
-            Phone VARCHAR(15)
+            Name VARCHAR(100) NOT NULL,
+            DateOfBirth DATE NOT NULL,
+            Email VARCHAR(100) UNIQUE NOT NULL,
+            Phone VARCHAR(15) NOT NULL
         );
     """;
 
@@ -23,8 +23,8 @@ public class Constants {
         CREATE TABLE IF NOT EXISTS Courses (
             CourseID BIGINT AUTO_INCREMENT PRIMARY KEY,
             CourseName VARCHAR(100) NOT NULL,
-            Section INT,
-            Credits BIGINT
+            Section INT NOT NULL,
+            Credits BIGINT  NOT NULL
         );
     """;
 
@@ -33,7 +33,7 @@ public class Constants {
             EnrollmentID BIGINT AUTO_INCREMENT PRIMARY KEY,
             StudentID BIGINT NOT NULL,
             CourseID BIGINT NOT NULL,
-            EnrollmentDate DATE,
+            EnrollmentDate DATE NOT NULL,
             FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
             FOREIGN KEY (CourseID) REFERENCES Courses(CourseID)
         );
@@ -43,8 +43,8 @@ public class Constants {
         CREATE TABLE IF NOT EXISTS Grades (
             GradeID BIGINT AUTO_INCREMENT PRIMARY KEY,
             EnrollmentID BIGINT NOT NULL,
-            Grade VARCHAR(10),
-            GradingDate DATE,
+            Grade VARCHAR(2) NOT NULL,
+            GradingDate DATE NOT NULL,
             FOREIGN KEY (EnrollmentID) REFERENCES Enrollments(EnrollmentID)
         );
     """; 
