@@ -1,14 +1,65 @@
-import React, { useState } from "react";
-import { FaRegEdit } from "react-icons/fa";
-import { MdDeleteForever } from "react-icons/md";
+import React, { useState, useEffect } from "react";
+
+import Axios from "../constants/api"
+import StudentsTable from "../components/StudentsTable";
+
 
 const Students = () => {
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false)
+  const [students, setStudents] = useState([])
+  const [studentForm, setStudentForm] = useState({
+    studentId: "",
+    name: "",
+    dateOfBirth: "",
+    email: "",
+    phoneNum: ""
+  })
+
+  // get request to get all students from database
+  const getStudentRecords = () => {
+    Axios.get("/api/student/all-students")
+      .then(res => {
+        console.log(res.data)
+        // update the students variable state
+        setStudents(res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  // post request to add a new student
+  const addStudentRecord = (e) => {
+    e.preventDefault();
+
+    Axios.post("/api/student/add-student", studentForm)
+      .then(res => {
+        console.log(res.data)
+        // clear form
+        setStudentForm({
+          studentId: "",
+          name: "",
+          dateOfBirth: "",
+          email: "",
+          phoneNum: "" 
+        })
+        // show the updated table
+        getStudentRecords()
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  // when component mounts, get students records from database
+  useEffect(() => {
+    getStudentRecords()
+  }, [])
 
   // Function to toggle modal visibility
   const toggleModal = () => {
-    setShowModal(!showModal);
-  };
+    setShowModal(!showModal)
+  }
 
   return (
     <div
@@ -23,108 +74,12 @@ const Students = () => {
       }}
     >
       {/* Content */}
-      <div
-        style={{
-          padding: "20px",
-          backgroundColor: "#f9f9f9",
-          borderRadius: "0 0 5px 5px",
-        }}
-      >
+      <div style={{ padding: "20px", backgroundColor: "#f9f9f9", borderRadius: "5px 5px 5px 5px" }}>
         {/* Scrollable Table */}
-        <div style={{ maxHeight: "300px", overflowY: "auto", border: "1px solid #ddd" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              color: "black", // Text color
-            }}
-          >
-            <thead>
-              <tr style={{ backgroundColor: "#f1f1f1", textAlign: "left" }}>
-                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
-                  StudentID
-                </th>
-                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
-                  Name
-                </th>
-                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
-                  Date Of Birth
-                </th>
-                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
-                  Email
-                </th>
-                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
-                  Phone
-                </th>
-                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* Example Data Row */}
-              <tr>
-                <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>1</td>
-                <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
-                  John Doe
-                </td>
-                <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
-                  1990-01-01
-                </td>
-                <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
-                  john@example.com
-                </td>
-                <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
-                  123-456-7890
-                </td>
-                <td
-                  style={{
-                    padding: "10px",
-                    borderBottom: "1px solid #ddd",
-                    textAlign: "center",
-                  }}
-                >
-                  <button
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      cursor: "pointer",
-                      margin: "0 5px",
-                      color: "#007bff",
-                    }}
-                    onClick={() => alert("Edit clicked")}
-                  >
-                    <FaRegEdit size={20} />
-                  </button>
-                  <button
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      cursor: "pointer",
-                      margin: "0 5px",
-                      color: "#dc3545",
-                    }}
-                    onClick={() => alert("Delete clicked")}
-                  >
-                    <MdDeleteForever size={20} />
-                  </button>
-                </td>
-              </tr>
-              {/* Empty Row */}
-              <tr>
-                <td
-                  colSpan="6"
-                  style={{
-                    textAlign: "center",
-                    padding: "20px",
-                    color: "#aaa",
-                  }}
-                >
-                  No data available
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div style={{ maxHeight: "700px", overflowY: "auto", border: "1px solid #ddd" }}>
+
+          <StudentsTable students={students} getStudentRecords={getStudentRecords}/>
+
         </div>
         {/* Add New Students Button */}
         <div style={{ textAlign: "right", marginTop: "20px" }}>
@@ -199,22 +154,16 @@ const Students = () => {
             </div>
 
             {/* Form for Adding Students */}
-            <form>
+            <form onSubmit={addStudentRecord}>
               <div style={{ marginBottom: "10px", marginTop: "15px" }}>
                 <label style={{ color: "black" }}>
                   StudentID: <span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                   type="text"
-                  style={{
-                    width: "100%",
-                    padding: "5px",
-                    margin: "5px 0",
-                    border: "1px solid #ccc",
-                    borderRadius: "3px",
-                    backgroundColor: "white",
-                    color: "black",
-                  }}
+                  value={studentForm.studentId}
+                  onChange={(e) => setStudentForm({ ...studentForm, studentId: e.target.value })}
+                  style={{ width: "100%", padding: "5px", margin: "5px 0", border: "1px solid #ccc", borderRadius: "3px", backgroundColor: "white", color: "black" }}
                 />
               </div>
               <div style={{ marginBottom: "10px" }}>
@@ -223,15 +172,9 @@ const Students = () => {
                 </label>
                 <input
                   type="text"
-                  style={{
-                    width: "100%",
-                    padding: "5px",
-                    margin: "5px 0",
-                    border: "1px solid #ccc",
-                    borderRadius: "3px",
-                    backgroundColor: "white",
-                    color: "black",
-                  }}
+                  value={studentForm.name}
+                  onChange={(e) => setStudentForm({ ...studentForm, name: e.target.value })}
+                  style={{ width: "100%", padding: "5px", margin: "5px 0", border: "1px solid #ccc", borderRadius: "3px", backgroundColor: "white", color: "black" }}
                 />
               </div>
               <div style={{ marginBottom: "10px" }}>
@@ -240,15 +183,9 @@ const Students = () => {
                 </label>
                 <input
                   type="date"
-                  style={{
-                    width: "100%",
-                    padding: "5px",
-                    margin: "5px 0",
-                    border: "1px solid #ccc",
-                    borderRadius: "3px",
-                    backgroundColor: "white",
-                    color: "black",
-                  }}
+                  value={studentForm.dateOfBirth}
+                  onChange={(e) => setStudentForm({ ...studentForm, dateOfBirth: e.target.value })}
+                  style={{ width: "100%", padding: "5px", margin: "5px 0", border: "1px solid #ccc", borderRadius: "3px", backgroundColor: "white", color: "black" }}
                 />
               </div>
               <div style={{ marginBottom: "10px" }}>
@@ -257,15 +194,9 @@ const Students = () => {
                 </label>
                 <input
                   type="email"
-                  style={{
-                    width: "100%",
-                    padding: "5px",
-                    margin: "5px 0",
-                    border: "1px solid #ccc",
-                    borderRadius: "3px",
-                    backgroundColor: "white",
-                    color: "black",
-                  }}
+                  value={studentForm.email}
+                  onChange={(e) => setStudentForm({ ...studentForm, email: e.target.value })}
+                  style={{ width: "100%", padding: "5px", margin: "5px 0", border: "1px solid #ccc", borderRadius: "3px", backgroundColor: "white", color: "black" }}
                 />
               </div>
               <div style={{ marginBottom: "10px" }}>
@@ -273,47 +204,23 @@ const Students = () => {
                   Phone: <span style={{ color: "red" }}>*</span>
                 </label>
                 <input
-                  type="tel"
-                  style={{
-                    width: "100%",
-                    padding: "5px",
-                    margin: "5px 0",
-                    border: "1px solid #ccc",
-                    borderRadius: "3px",
-                    backgroundColor: "white",
-                    color: "black",
-                  }}
+                  type="text"
+                  value={studentForm.phoneNum}
+                  onChange={(e) => setStudentForm({ ...studentForm, phoneNum: e.target.value })}
+                  style={{ width: "100%", padding: "5px", margin: "5px 0", border: "1px solid #ccc", borderRadius: "3px", backgroundColor: "white", color: "black" }}
                 />
               </div>
               <div style={{ textAlign: "right" }}>
-              <button
-                  type="button"
-                  style={{
-                    padding: "10px 20px",
-                    backgroundColor: "#5cb85c",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "3px",
-                    cursor: "pointer",
-                    marginRight: "10px",
-                  }}
-                  onClick={() => {
-                    alert("Student added!");
-                    toggleModal();
-                  }}
+                <button
+                  type="submit"
+                  style={{ padding: "10px 20px", backgroundColor: "#5cb85c", color: "white", border: "none", borderRadius: "3px", cursor: "pointer", marginRight: "10px" }}
+                  onClick={() => {}}
                 >
                   Add
                 </button>
                 <button
                   type="button"
-                  style={{
-                    padding: "10px 20px",
-                    backgroundColor: "#d9534f",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "3px",
-                    cursor: "pointer",
-                  }}
+                  style={{ padding: "10px 20px", backgroundColor: "#d9534f", color: "white", border: "none", borderRadius: "3px", cursor: "pointer" }}
                   onClick={toggleModal}
                 >
                   Cancel
@@ -329,4 +236,4 @@ const Students = () => {
 
 export default Students;
 
-                 
+
