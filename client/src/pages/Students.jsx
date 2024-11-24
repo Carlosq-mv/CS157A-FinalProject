@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 
 import Axios from "../constants/api"
-import StudentsTable from "../components/StudentsTable";
+import StudentsTable from "../components/StudentsTable"
+import { RxCross2 } from "react-icons/rx"
 
 
 const Students = () => {
@@ -76,24 +77,14 @@ const Students = () => {
       {/* Content */}
       <div style={{ padding: "20px", backgroundColor: "#f9f9f9", borderRadius: "5px 5px 5px 5px" }}>
         {/* Scrollable Table */}
-        <div style={{ maxHeight: "700px", overflowY: "auto", border: "1px solid #ddd" }}>
+        <div style={{ maxHeight: "680px", overflowY: "auto", border: "1px solid #ddd" }}>
 
           <StudentsTable students={students} getStudentRecords={getStudentRecords}/>
 
         </div>
         {/* Add New Students Button */}
         <div style={{ textAlign: "right", marginTop: "20px" }}>
-          <button
-            onClick={toggleModal}
-            style={{
-              padding: "10px 20px",
-              backgroundColor: "#5cb85c",
-              color: "black",
-              border: "none",
-              borderRadius: "3px",
-              cursor: "pointer",
-            }}
-          >
+          <button onClick={toggleModal} className="btn btn-success">
             Add New Student
           </button>
         </div>
@@ -136,20 +127,9 @@ const Students = () => {
                 borderBottom: "1px solid #ccc",
               }}
             >
-              <h3 style={{ color: "black", margin: 0 }}>Add New Student</h3>
-              <button
-                onClick={toggleModal}
-                style={{
-                  backgroundColor: "transparent",
-                  border: "none",
-                  fontSize: "18px",
-                  color: "#333",
-                  cursor: "pointer",
-                  padding: "0",
-                  margin: "0",
-                }}
-              >
-                ×
+              <h3 className="font-abril text-black text-lg">Add New Student</h3>
+              <button onClick={toggleModal} className="btn btn-ghost text-black btn-circle text-lg">
+                <RxCross2 />
               </button>
             </div>
 
@@ -213,14 +193,13 @@ const Students = () => {
               <div style={{ textAlign: "right" }}>
                 <button
                   type="submit"
-                  style={{ padding: "10px 20px", backgroundColor: "#5cb85c", color: "white", border: "none", borderRadius: "3px", cursor: "pointer", marginRight: "10px" }}
-                  onClick={() => {}}
+                  className="btn btn-success text-white m-5"
                 >
                   Add
                 </button>
                 <button
                   type="button"
-                  style={{ padding: "10px 20px", backgroundColor: "#d9534f", color: "white", border: "none", borderRadius: "3px", cursor: "pointer" }}
+                  className="btn btn-error " 
                   onClick={toggleModal}
                 >
                   Cancel

@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
 import Axios from '../constants/api';
 import { FaRegEdit } from "react-icons/fa";
-import { MdDeleteForever } from "react-icons/md";
+import { MdDeleteForever, MdOutlineStayCurrentLandscape } from "react-icons/md";
 
 const StudentsTable = ({ students, getStudentRecords }) => {
   const [showModal, setShowModal] = useState(false)
+  const [editModal, setEditModal] = useState(false)
   const [selectedStudent, setSelectedStudent] = useState(null)
+  const [editStudentForm, setEditStudentForm] = useState({
+    studentId: "",
+    name: "",
+    dateOfBirth: "",
+    email: "",
+    phoneNum: ""
+  })
 
   // delete request to delete a certain student by id
   const deleteStudentRecord = (id) => {
@@ -22,6 +30,41 @@ const StudentsTable = ({ students, getStudentRecords }) => {
         console.log(`deleted student ID: ${id}`)
         setShowModal(false)
       })
+  }
+
+  const editStudentRecord = (id) => {
+    Axios.put(`/api/student/update-student/${id}`, editStudentForm)
+      .then(res => {
+        console.log(res)
+
+        setEditStudentForm({
+          studentId: "",
+          name: "",
+          dateOfBirth: "",
+          email: "",
+          phoneNum: ""
+        })
+        getStudentRecords()
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      .finally(() => {
+        console.log(`edited student ID: ${id}`)
+        setEditModal(false)
+      })
+  }
+
+  // handle the edit student
+  const handleEditStudent = (student) => {
+    setEditStudentForm({
+      studentId: student.studentId,
+      name: student.name,
+      dateOfBirth: student.dateOfBirth,
+      email: student.email,
+      phoneNum: student.phoneNum
+    });
+    setEditModal(true);
   }
 
   // handles when you click delete to show modal and get the student id
@@ -73,7 +116,7 @@ const StudentsTable = ({ students, getStudentRecords }) => {
                 <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>
                   <button
                     style={{ background: "transparent", border: "none", cursor: "pointer", margin: "0 5px", color: "#007bff" }}
-                    onClick={() => alert("Edit clicked")}
+                    onClick={() => handleEditStudent(student)}
                   >
                     <FaRegEdit size={20} />
                   </button>
@@ -99,7 +142,7 @@ const StudentsTable = ({ students, getStudentRecords }) => {
       {showModal && (
         <dialog id="delete_modal" className="modal" open>
           <div className="modal-box bg-white">
-            <h3 className="font-bold text-lg text-black">Delete Confirmation</h3>
+            <h3 className="font-bold text-3xl text-black font-abril">Delete Confirmation</h3>
             <p className="py-4 text-black">Are you sure you want to delete this student record?</p>
             <div className="modal-action">
               <button className="btn btn-error" onClick={handleConfirmDelete}>
@@ -112,6 +155,76 @@ const StudentsTable = ({ students, getStudentRecords }) => {
           </div>
         </dialog>
       )}
+
+      {editModal && (
+        <dialog id="edit_modal" className="modal" open>
+          <div className="modal-box bg-white w-96">
+            <h3 className="font-bold text-3xl pb-5 text-black font-abril">Edit Student</h3>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                editStudentRecord(editStudentForm.studentId);
+              }}
+            >
+              <div className="pb-5 flex flex-col">
+                <label className="text-black mb-2">Name:</label>
+                <input
+                  type="text"
+                  className="bg-white input input-bordered w-full text-black"
+                  style={{ borderColor: "rgb(204, 204, 204)" }}
+
+                  value={editStudentForm.name}
+                  onChange={(e) => setEditStudentForm({ ...editStudentForm, name: e.target.value })}
+                />
+              </div>
+              <div className="pb-5 flex flex-col">
+                <label className="text-black mb-2">Date of Birth:</label>
+                <input
+                  type="date"
+                  className="bg-white input input-bordered w-full text-black"
+                  style={{ borderColor: "rgb(204, 204, 204)" }}
+                  value={editStudentForm.dateOfBirth}
+                  onChange={(e) => setEditStudentForm({ ...editStudentForm, dateOfBirth: e.target.value })}
+                />
+              </div>
+              <div className="pb-5 flex flex-col">
+                <label className="text-black mb-2">Email:</label>
+                <input
+                  type="email"
+                  className="bg-white input input-bordered w-full  text-black"
+                  style={{ borderColor: "rgb(204, 204, 204)" }}
+                  value={editStudentForm.email}
+                  onChange={(e) => setEditStudentForm({ ...editStudentForm, email: e.target.value })}
+                />
+              </div>
+              <div className="pb-5 flex flex-col">
+                <label className="text-black mb-2">Phone:</label>
+                <input
+                  type="text"
+                  className="bg-white input input-bordered w-full text-black"
+                  style={{ borderColor: "rgb(204, 204, 204)" }}
+                  value={editStudentForm.phoneNum}
+                  onChange={(e) => setEditStudentForm({ ...editStudentForm, phoneNum: e.target.value })}
+                />
+              </div>
+              <div className="modal-action gap-44 items-center flex justify-center">
+                <button type="submit" className="btn btn-success">
+                  Save
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-error"
+                  onClick={() => setEditModal(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </dialog>
+
+      )}
+
     </>
   );
 };
