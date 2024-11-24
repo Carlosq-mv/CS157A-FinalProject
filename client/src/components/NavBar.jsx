@@ -25,21 +25,21 @@ const NavBar = () => {
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
               {/*TODO: add links*/}
-              <li><a>Students</a></li>
-              <li><a>Courses</a></li>
+              <li><a href="/students">Students</a></li>
+              <li><a href="/courses">Courses</a></li>
               <li><a>Enrollments</a></li>
               <li><a>Grades</a></li>
             </ul>
           </div>
-          <a className="btn btn-ghost text-2xl font-abril">Student Center</a>
+          <a href="/home" className="btn btn-ghost text-2xl font-abril">Student Center</a>
         </div>
 
         <div className="navbar-center hidden lg:flex">
           <div className="navbar-center hidden lg:flex">
-            <ul className="menu menu-horizontal px-1 gap-10 font-black text-sm">
+            <ul className="menu menu-horizontal px-1 gap-10 font-black text-lg">
               {/*TODO: add links*/}
-              <li><a>Students</a></li>
-              <li><a>Courses</a></li>
+              <li><a href="/students">Students</a></li>
+              <li><a href="/courses">Courses</a></li>
               <li><a>Enrollments</a></li>
               <li><a>Grades</a></li>
             </ul>
