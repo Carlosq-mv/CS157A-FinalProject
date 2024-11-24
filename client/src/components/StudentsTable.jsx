@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Axios from '../constants/api';
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
-import ConfirmationModal from './ConfirmationModal';
 
 const StudentsTable = ({ students, getStudentRecords }) => {
   const [showModal, setShowModal] = useState(false)
@@ -31,7 +30,7 @@ const StudentsTable = ({ students, getStudentRecords }) => {
     setShowModal(true)
   }
 
-  // handles user confirmation to delete the recorc
+  // handles user confirmation to delete the record
   const handleConfirmDelete = () => {
     if (selectedStudent) {
       // call function that delete reccord
@@ -41,7 +40,7 @@ const StudentsTable = ({ students, getStudentRecords }) => {
     }
   }
 
-  // handles user cancelation to delete the record
+  // handles user cancellation to delete the record
   const handleCancelDelete = () => {
     // hide modal
     setShowModal(false)
@@ -59,7 +58,7 @@ const StudentsTable = ({ students, getStudentRecords }) => {
             <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Date Of Birth</th>
             <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Email</th>
             <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Phone</th>
-            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Action</th>
+            <th style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>Action</th>
           </tr>
         </thead>
         <tbody>
