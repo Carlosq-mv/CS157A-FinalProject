@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Axios from "../constants/api"
 import StudentsTable from "../components/StudentsTable"
 import { RxCross2 } from "react-icons/rx"
+import { PiStudentBold } from "react-icons/pi"
 
 
 const Students = () => {
@@ -42,7 +43,7 @@ const Students = () => {
           name: "",
           dateOfBirth: "",
           email: "",
-          phoneNum: "" 
+          phoneNum: ""
         })
         // show the updated table
         getStudentRecords()
@@ -63,28 +64,23 @@ const Students = () => {
   }
 
   return (
-    <div
-      style={{
-        fontFamily: "Arial, sans-serif",
-        maxWidth: "1200px",
-        margin: "20px auto",
-        border: "1px solid #ccc",
-        borderRadius: "10px",
-        padding: "20px",
-        boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
-      }}
-    >
+    <div style={{ fontFamily: "Arial, sans-serif", maxWidth: "1200px", margin: "20px auto", border: "1px solid #ccc", borderRadius: "10px", padding: "20px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)" }}>
       {/* Content */}
+      <div role="alert" className="alert alert-info rounded-md">
+        <PiStudentBold className="h-6 w-6 shrink-0 stroke-current" />
+        <span className="font-abril text-xl">Students</span>
+      </div>
+
       <div style={{ padding: "20px", backgroundColor: "#f9f9f9", borderRadius: "5px 5px 5px 5px" }}>
         {/* Scrollable Table */}
-        <div style={{ maxHeight: "680px", overflowY: "auto", border: "1px solid #ddd" }}>
+        <div style={{ maxHeight: "620px", overflowY: "auto", border: "1px solid #ddd" }}>
 
-          <StudentsTable students={students} getStudentRecords={getStudentRecords}/>
+          <StudentsTable students={students} getStudentRecords={getStudentRecords} />
 
         </div>
         {/* Add New Students Button */}
         <div style={{ textAlign: "right", marginTop: "20px" }}>
-          <button onClick={toggleModal} className="btn btn-success">
+          <button onClick={toggleModal} className="btn btn-success text-white">
             Add New Student
           </button>
         </div>
@@ -195,11 +191,11 @@ const Students = () => {
                   type="submit"
                   className="btn btn-success text-white m-5"
                 >
-                  Add
+                  Add Student
                 </button>
                 <button
                   type="button"
-                  className="btn btn-error " 
+                  className="btn btn-error "
                   onClick={toggleModal}
                 >
                   Cancel
