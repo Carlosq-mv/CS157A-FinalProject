@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
-import Axios from '../constants/api';
+import { useState } from 'react';
+
 import { FaRegEdit } from "react-icons/fa";
-import { MdDeleteForever, MdOutlineStayCurrentLandscape } from "react-icons/md";
+import { MdDeleteForever } from "react-icons/md";
+
+import Axios from '../constants/api';
+import DeleteModal from './modals/DeleteModal';
+import EditStudentModal from './modals/EditStudentModal';
+
 
 const StudentsTable = ({ students, getStudentRecords }) => {
-  const [showModal, setShowModal] = useState(false)
+  const [deleteModal, setDeleteModal] = useState(false)
   const [editModal, setEditModal] = useState(false)
   const [selectedStudent, setSelectedStudent] = useState(null)
   const [editStudentForm, setEditStudentForm] = useState({
@@ -15,28 +20,11 @@ const StudentsTable = ({ students, getStudentRecords }) => {
     phoneNum: ""
   })
 
-  // delete request to delete a certain student by id
-  const deleteStudentRecord = (id) => {
-    Axios.delete(`/api/student/delete-student/${id}`)
-      .then((res) => {
-        console.log(res)
-        // upon succesfull deletion, show the updated table
-        getStudentRecords()
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-      .finally(() => {
-        console.log(`deleted student ID: ${id}`)
-        setShowModal(false)
-      })
-  }
-
+  // put request to edit a certain student
   const editStudentRecord = (id) => {
     Axios.put(`/api/student/update-student/${id}`, editStudentForm)
       .then(res => {
-        console.log(res)
-
+        // clear the from after succcessfull edit
         setEditStudentForm({
           studentId: "",
           name: "",
@@ -44,18 +32,36 @@ const StudentsTable = ({ students, getStudentRecords }) => {
           email: "",
           phoneNum: ""
         })
+        // get the new updated record to be displayed on the table
         getStudentRecords()
+        // hide the modal
+        setEditModal(false)
       })
       .catch(err => {
+        // log errors
         console.log(err)
-      })
-      .finally(() => {
-        console.log(`edited student ID: ${id}`)
-        setEditModal(false)
       })
   }
 
-  // handle the edit student
+  // delete request to delete a certain student by id
+  const deleteStudentRecord = (id) => {
+    Axios.delete(`/api/student/delete-student/${id}`)
+      .then((res) => {
+        // upon succesfull deletion, show the updated table
+        getStudentRecords()
+      })
+      .catch((err) => {
+        // log error
+        console.log(err)
+      })
+      .finally(() => {
+        // hide the delete modal
+        setDeleteModal(false)
+      })
+  }
+
+
+  // populate the edit modal with the selected student 
   const handleEditStudent = (student) => {
     setEditStudentForm({
       studentId: student.studentId,
@@ -63,14 +69,17 @@ const StudentsTable = ({ students, getStudentRecords }) => {
       dateOfBirth: student.dateOfBirth,
       email: student.email,
       phoneNum: student.phoneNum
-    });
+    })
+    // show the edit form modal
     setEditModal(true);
   }
 
   // handles when you click delete to show modal and get the student id
   const handleDeleteClick = (id) => {
+    // set the if of the student chosen
     setSelectedStudent(id)
-    setShowModal(true)
+    // show the delete modal
+    setDeleteModal(true)
   }
 
   // handles user confirmation to delete the record
@@ -83,12 +92,14 @@ const StudentsTable = ({ students, getStudentRecords }) => {
     }
   }
 
-  // handles user cancellation to delete the record
-  const handleCancelDelete = () => {
-    // hide modal
-    setShowModal(false)
-    // clear selected student
-    setSelectedStudent(null)
+  // function to change the form values
+  const handleChange = (key, value) => {
+    setEditStudentForm({ ...editStudentForm, [key]: value });
+  }
+
+  // function to hide or show delete modal
+  const toggleModal = () => {
+    setDeleteModal(!deleteModal);
   }
 
   return (
@@ -139,90 +150,22 @@ const StudentsTable = ({ students, getStudentRecords }) => {
         </tbody>
       </table>
 
-      {showModal && (
-        <dialog id="delete_modal" className="modal" open>
-          <div className="modal-box bg-white">
-            <h3 className="font-bold text-3xl text-black font-abril">Delete Confirmation</h3>
-            <p className="py-4 text-black">Are you sure you want to delete this student record?</p>
-            <div className="modal-action">
-              <button className="btn btn-error" onClick={handleConfirmDelete}>
-                Confirm
-              </button>
-              <button className="btn btn-secondary" onClick={handleCancelDelete}>
-                Cancel
-              </button>
-            </div>
-          </div>
-        </dialog>
+      {deleteModal && (
+        <DeleteModal
+          title={"Delete Student"}
+          message={"Are you sure tou want to delete this student record?"}
+          toggleModal={toggleModal}
+          onDelete={handleConfirmDelete}
+        />
       )}
 
       {editModal && (
-        <dialog id="edit_modal" className="modal" open>
-          <div className="modal-box bg-white w-96">
-            <h3 className="font-bold text-3xl pb-5 text-black font-abril">Edit Student</h3>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                editStudentRecord(editStudentForm.studentId);
-              }}
-            >
-              <div className="pb-5 flex flex-col">
-                <label className="text-black mb-2">Name:</label>
-                <input
-                  type="text"
-                  className="bg-white input input-bordered w-full text-black"
-                  style={{ borderColor: "rgb(204, 204, 204)" }}
-
-                  value={editStudentForm.name}
-                  onChange={(e) => setEditStudentForm({ ...editStudentForm, name: e.target.value })}
-                />
-              </div>
-              <div className="pb-5 flex flex-col">
-                <label className="text-black mb-2">Date of Birth:</label>
-                <input
-                  type="date"
-                  className="bg-white input input-bordered w-full text-black"
-                  style={{ borderColor: "rgb(204, 204, 204)" }}
-                  value={editStudentForm.dateOfBirth}
-                  onChange={(e) => setEditStudentForm({ ...editStudentForm, dateOfBirth: e.target.value })}
-                />
-              </div>
-              <div className="pb-5 flex flex-col">
-                <label className="text-black mb-2">Email:</label>
-                <input
-                  type="email"
-                  className="bg-white input input-bordered w-full  text-black"
-                  style={{ borderColor: "rgb(204, 204, 204)" }}
-                  value={editStudentForm.email}
-                  onChange={(e) => setEditStudentForm({ ...editStudentForm, email: e.target.value })}
-                />
-              </div>
-              <div className="pb-5 flex flex-col">
-                <label className="text-black mb-2">Phone:</label>
-                <input
-                  type="text"
-                  className="bg-white input input-bordered w-full text-black"
-                  style={{ borderColor: "rgb(204, 204, 204)" }}
-                  value={editStudentForm.phoneNum}
-                  onChange={(e) => setEditStudentForm({ ...editStudentForm, phoneNum: e.target.value })}
-                />
-              </div>
-              <div className="modal-action gap-44 items-center flex justify-center">
-                <button type="submit" className="btn btn-success text-white">
-                  Save
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-error"
-                  onClick={() => setEditModal(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </dialog>
-
+        <EditStudentModal
+          form={editStudentForm}
+          onChange={handleChange}
+          onSubmit={editStudentRecord}
+          onCancel={() => setEditModal(false)}
+        />
       )}
 
     </>
