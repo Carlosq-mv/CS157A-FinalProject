@@ -54,7 +54,7 @@ public class StudentController {
         
         // return the records if they exists
         if(students.size() != 0) {
-            return ResponseEntity.status(HttpStatus.FOUND).body(students);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(students);
         } else {
             // return error message
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No students in databse.");
