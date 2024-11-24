@@ -208,7 +208,7 @@ const StudentsTable = ({ students, getStudentRecords }) => {
                 />
               </div>
               <div className="modal-action gap-44 items-center flex justify-center">
-                <button type="submit" className="btn btn-success">
+                <button type="submit" className="btn btn-success text-white">
                   Save
                 </button>
                 <button
