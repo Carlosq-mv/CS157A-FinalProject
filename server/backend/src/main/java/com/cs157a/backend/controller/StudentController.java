@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-
 @RestController
 @RequestMapping("/api/student")
 public class StudentController {
@@ -30,12 +29,30 @@ public class StudentController {
     // Create
     @PostMapping("/add-student")
     public ResponseEntity<?> addStudentRecord(@RequestBody Student student) {
+        // check if the student is null
+        if (student == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No student object.");
+        }
+
+        // check if any fields are empty
+        if (student.getEmail() == null || student.getEmail().isBlank() ||
+                student.getName() == null || student.getName().isBlank() ||
+                student.getPhoneNum() == null || student.getPhoneNum().isBlank() ||
+                student.getDateOfBirth() == null) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Please fill all form fields.");
+        }
 
         // check if the student email already exists
-        if(studentDAO.isDuplicate(student)) {
+        if (studentDAO.isDuplicate(student)) {
             // return error message
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Student email already exists.");
-        } 
+        }
+
+        // validate phone format
+        String phoneRegex = "^\\d{3}-\\d{3}-\\d{4}$";
+        if (!student.getPhoneNum().matches(phoneRegex)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid phone format: xxx-xxx-xxxx");
+        }
 
         student.setStudentId(student.getStudentId());
         // add new student record
@@ -51,26 +68,38 @@ public class StudentController {
 
         // get all records of students in database
         List<Student> students = studentDAO.getRecords();
-        
+
         // return the records if they exists
-        if(students.size() != 0) {
+        if (students.size() != 0) {
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(students);
         } else {
             // return error message
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No students in databse.");
         }
     }
-    
+
     // Update
     @PutMapping("/update-student/{id}")
     public ResponseEntity<?> updateStudentRecord(@PathVariable Long id, @RequestBody Student student) {
 
         // check if the student exists in database (by id)
-        if(!studentDAO.exists(id)) {
+        if (!studentDAO.exists(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student does not exist.");
         }
+        // check if any fields are empty or deleted 
+        if (student.getEmail() == null || student.getEmail().isBlank() ||
+                student.getName() == null || student.getName().isBlank() ||
+                student.getPhoneNum() == null || student.getPhoneNum().isBlank() ||
+                student.getDateOfBirth() == null) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Empty form fields.");
+        }
 
-        // set the id 
+        // Validate the phone format when updating student record
+        String phoneRegex = "^\\d{3}-\\d{3}-\\d{4}$";
+        if (!student.getPhoneNum().matches(phoneRegex)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid phone format: xxx-xxx-xxxx");
+        }
+        // set the id
         student.setStudentId(id);
 
         // call dao method to update the record
@@ -85,7 +114,7 @@ public class StudentController {
     public ResponseEntity<?> deleteStudentRecord(@PathVariable Long id, @RequestBody(required = false) String param) {
 
         // check if the student exists in database (by id)
-        if(!studentDAO.exists(id)) {
+        if (!studentDAO.exists(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student does not exist.");
         }
 
@@ -101,7 +130,7 @@ public class StudentController {
     public ResponseEntity<?> getStudentById(@PathVariable Long id, @RequestParam(required = false) String param) {
 
         // check if the student exists in database (by id)
-        if(!studentDAO.exists(id)) {
+        if (!studentDAO.exists(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student does not exist.");
         }
 
