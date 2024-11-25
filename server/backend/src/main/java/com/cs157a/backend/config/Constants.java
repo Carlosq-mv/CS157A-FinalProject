@@ -34,8 +34,8 @@ public class Constants {
             StudentID BIGINT NOT NULL,
             CourseID BIGINT NOT NULL,
             EnrollmentDate DATE NOT NULL,
-            FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
-            FOREIGN KEY (CourseID) REFERENCES Courses(CourseID)
+            FOREIGN KEY (StudentID) REFERENCES Students(StudentID) ON DELETE CASCADE,
+            FOREIGN KEY (CourseID) REFERENCES Courses(CourseID) ON DELETE CASCADE
         );
     """;
 
@@ -45,7 +45,7 @@ public class Constants {
             EnrollmentID BIGINT NOT NULL,
             Grade VARCHAR(2) NOT NULL,
             GradingDate DATE NOT NULL,
-            FOREIGN KEY (EnrollmentID) REFERENCES Enrollments(EnrollmentID)
+            FOREIGN KEY (EnrollmentID) REFERENCES Enrollments(EnrollmentID) ON DELETE CASCADE
         );
     """; 
 }
