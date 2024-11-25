@@ -8,6 +8,7 @@ import AddCourseModal from "../components/modals/AddCourseModal"
 
 
 const Courses = () => {
+  const [errorMessage, setErrorMessage] = useState("")
   const [showModal, setShowModal] = useState(false)
   const [courses, setCourses] = useState([])
   const [courseForm, setCourseForm] = useState({
@@ -48,6 +49,7 @@ const Courses = () => {
           section: "",
           credits: ""
         })
+        setErrorMessage("")
         // show the update table
         getCourses()
         // hide the modal
@@ -56,6 +58,7 @@ const Courses = () => {
       .catch(err => {
         // log errors
         console.log(err)
+        setErrorMessage(err.response.data)
       })
   }
 
@@ -66,7 +69,10 @@ const Courses = () => {
   
   // function to toggle modal for adding new course form 
   const toggleModal = () => {
-    setShowModal(!showModal);
+    setShowModal(!showModal)
+    if(!showModal) {
+      setErrorMessage("")
+    }
   }
 
   // when component mounts, get course records from database
@@ -99,6 +105,7 @@ const Courses = () => {
               onSubmit={addCourse}
               onChange={handleChange}
               toggleModal={toggleModal}
+              errorMsg={errorMessage}
             />
           )}
 
