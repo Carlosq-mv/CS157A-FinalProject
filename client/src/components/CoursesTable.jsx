@@ -9,6 +9,7 @@ import EditCourseModal from './modals/EditCourseModal';
 
 
 const CoursesTable = ({ courses, getCourseRecords }) => {
+  const [errorMessage, setErrorMessage] = useState("")
   const [deleteModal, setDeleteModal] = useState(false)
   const [editModal, setEditModal] = useState(false)
   const [selectedCourse, setSelectedCourse] = useState(null)
@@ -30,6 +31,7 @@ const CoursesTable = ({ courses, getCourseRecords }) => {
           section: "",
           credits: ""
         })
+        setErrorMessage("")
         // get the new updated record to display on table
         getCourseRecords()
         // hide the modal
@@ -38,6 +40,7 @@ const CoursesTable = ({ courses, getCourseRecords }) => {
       .catch(err => {
         // log errors
         console.log(err)
+        setErrorMessage(err.response.data)
       })
   }
 
@@ -94,7 +97,7 @@ const CoursesTable = ({ courses, getCourseRecords }) => {
 
   // function to hide or show deleteModal
   const toggleModal = () => {
-    setDeleteModal(!deleteModal);
+    setDeleteModal(!deleteModal)
   }
 
   return (
@@ -155,7 +158,11 @@ const CoursesTable = ({ courses, getCourseRecords }) => {
           form={editCourseForm}
           onChange={handleChange}
           onSubmit={editCourseRecord}
-          onCancel={() => setEditModal(false)}
+          onCancel={() => {
+            setEditModal(false)
+            setErrorMessage("")
+          }}
+          errorMsg={errorMessage}
         />
       )}
     </>

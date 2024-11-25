@@ -1,6 +1,7 @@
 import { RxCross2 } from "react-icons/rx"
+import Alert from "../Alert"
 
-const EditCourseModal = ({ form, onChange, onSubmit, onCancel }) => {
+const EditCourseModal = ({ form, onChange, onSubmit, onCancel, errorMsg }) => {
   return (
     <>
       <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)", display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -59,6 +60,9 @@ const EditCourseModal = ({ form, onChange, onSubmit, onCancel }) => {
                 <option value="4">4.0</option>
               </select>
             </div>
+
+            {errorMsg && (<Alert message={errorMsg} /> )}
+
 
             <div className="modal-action gap-44 items-center flex justify-center">
               <button type="submit" className="btn btn-success text-white">
