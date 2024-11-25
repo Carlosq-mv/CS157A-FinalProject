@@ -1,6 +1,7 @@
 import { RxCross2 } from "react-icons/rx"
+import Alert from "../Alert"
 
-const AddStudentModal = ({ form, onChange, onSubmit, toggleModal }) => {
+const AddStudentModal = ({ form, onChange, onSubmit, toggleModal, errorMsg }) => {
   return (
     <>
       <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)", display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -15,8 +16,7 @@ const AddStudentModal = ({ form, onChange, onSubmit, toggleModal }) => {
 
           {/* Form for Adding Students */}
           <form onSubmit={onSubmit}>
-            <div style={{ marginBottom: "10px", marginTop: "15px" }}>
-              <label style={{ color: "black" }}>
+            <div style={{ marginBottom: "10px", marginTop: "15px" }}> <label style={{ color: "black" }}>
                 StudentID: <span style={{ color: "red" }}>*</span>
               </label>
               <input
@@ -75,6 +75,7 @@ const AddStudentModal = ({ form, onChange, onSubmit, toggleModal }) => {
                 onChange={(e) => onChange("phoneNum", e.target.value)}
               />
             </div>
+            {errorMsg && (<Alert message={errorMsg} />)}
             <div style={{ textAlign: "right" }}>
               <button
                 type="submit"

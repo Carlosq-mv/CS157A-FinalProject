@@ -10,6 +10,7 @@ import AddStudentModal from "../components/modals/AddStudentModal";
 const Students = () => {
   const [showModal, setShowModal] = useState(false)
   const [students, setStudents] = useState([])
+  const [errorMessage, setErrorMessage] = useState("")
   const [studentForm, setStudentForm] = useState({
     studentId: "",
     name: "",
@@ -46,6 +47,7 @@ const Students = () => {
           email: "",
           phoneNum: ""
         })
+        setErrorMessage("")
         // show the updated table
         getStudentRecords()
         // hide modal
@@ -53,7 +55,8 @@ const Students = () => {
       })
       .catch(err => {
         // log errors
-        console.log(err)
+        console.log(err.response.data)
+        setErrorMessage(err.response.data)
       })
   }
   // function to change the form values
@@ -64,6 +67,9 @@ const Students = () => {
   // Function to toggle modal visibility
   const toggleModal = () => {
     setShowModal(!showModal)
+    if (!showModal) {
+      setErrorMessage("") // clear error message when closing modal
+    }
   }
 
   // when component mounts, get students records from database
@@ -100,6 +106,7 @@ const Students = () => {
           onSubmit={addStudentRecord}
           onChange={handleChange}
           toggleModal={toggleModal}
+          errorMsg={errorMessage}
         />
       )}
 

@@ -10,6 +10,7 @@ import EditStudentModal from './modals/EditStudentModal';
 
 const StudentsTable = ({ students, getStudentRecords }) => {
   const [deleteModal, setDeleteModal] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
   const [editModal, setEditModal] = useState(false)
   const [selectedStudent, setSelectedStudent] = useState(null)
   const [editStudentForm, setEditStudentForm] = useState({
@@ -32,6 +33,7 @@ const StudentsTable = ({ students, getStudentRecords }) => {
           email: "",
           phoneNum: ""
         })
+        setErrorMessage("")
         // get the new updated record to be displayed on the table
         getStudentRecords()
         // hide the modal
@@ -40,6 +42,7 @@ const StudentsTable = ({ students, getStudentRecords }) => {
       .catch(err => {
         // log errors
         console.log(err)
+        setErrorMessage(err.response.data)
       })
   }
 
@@ -153,7 +156,7 @@ const StudentsTable = ({ students, getStudentRecords }) => {
       {deleteModal && (
         <DeleteModal
           title={"Delete Student"}
-          message={"Are you sure tou want to delete this student record?"}
+          message={"Are you sure you want to delete this student record?"}
           toggleModal={toggleModal}
           onDelete={handleConfirmDelete}
         />
@@ -164,7 +167,11 @@ const StudentsTable = ({ students, getStudentRecords }) => {
           form={editStudentForm}
           onChange={handleChange}
           onSubmit={editStudentRecord}
-          onCancel={() => setEditModal(false)}
+          onCancel={() => {
+            setEditModal(false)
+            setErrorMessage("")
+          }}
+          errorMsg={errorMessage}
         />
       )}
 
