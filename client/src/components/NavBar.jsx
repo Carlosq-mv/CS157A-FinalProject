@@ -27,7 +27,7 @@ const NavBar = () => {
               {/*TODO: add links*/}
               <li><a href="/students">Students</a></li>
               <li><a href="/courses">Courses</a></li>
-              <li><a>Enrollments</a></li>
+              <li><a href="/enrollments">Enrollments</a></li>
               <li><a>Grades</a></li>
             </ul>
           </div>
@@ -40,7 +40,7 @@ const NavBar = () => {
               {/*TODO: add links*/}
               <li><a href="/students">Students</a></li>
               <li><a href="/courses">Courses</a></li>
-              <li><a>Enrollments</a></li>
+              <li><a href="/enrollments">Enrollments</a></li>
               <li><a>Grades</a></li>
             </ul>
           </div>
