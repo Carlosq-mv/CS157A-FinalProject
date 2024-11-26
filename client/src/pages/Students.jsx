@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { PiStudentBold } from "react-icons/pi"
 
 import Axios from "../constants/api"
-import StudentsTable from "../components/StudentsTable"
+import StudentsTable from "../components/tables/StudentsTable"
 import AddStudentModal from "../components/modals/AddStudentModal";
 import Table from "../components/Table";
 

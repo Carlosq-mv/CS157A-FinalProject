@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import { PiBookOpenTextBold } from "react-icons/pi"
 
 import Axios from "../constants/api"
-import CoursesTable from "../components/CoursesTable"
+import CoursesTable from "../components/tables/CoursesTable"
 import AddCourseModal from "../components/modals/AddCourseModal"
 import Table from "../components/Table"
 
