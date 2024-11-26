@@ -5,6 +5,7 @@ import { PiStudentBold } from "react-icons/pi"
 import Axios from "../constants/api"
 import StudentsTable from "../components/StudentsTable"
 import AddStudentModal from "../components/modals/AddStudentModal";
+import Table from "../components/Table";
 
 
 const Students = () => {
@@ -59,10 +60,6 @@ const Students = () => {
         setErrorMessage(err.response.data)
       })
   }
-  // function to change the form values
-  const handleChange = (key, value) => {
-    setStudentForm({ ...studentForm, [key]: value });
-  }
 
   // Function to toggle modal visibility
   const toggleModal = () => {
@@ -78,39 +75,31 @@ const Students = () => {
   }, [])
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", maxWidth: "1200px", margin: "20px auto", border: "1px solid #ccc", borderRadius: "10px", padding: "20px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)" }}>
-      {/* Content */}
-      <div role="alert" className="alert alert-info rounded-md">
-        <PiStudentBold className="h-6 w-6 shrink-0 stroke-current" />
-        <span className="font-abril text-xl">Students</span>
-      </div>
+    <>
+      <Table
+        title={"Students"}
+        icon={<PiStudentBold className="h-6 w-6 shrink-0 stroke-current" />}
+      >
 
-      <div style={{ padding: "20px", backgroundColor: "#f9f9f9", borderRadius: "5px 5px 5px 5px" }}>
-        {/* Scrollable Table */}
         <div style={{ maxHeight: "620px", overflowY: "auto", border: "1px solid #ddd" }}>
-
           <StudentsTable students={students} getStudentRecords={getStudentRecords} />
-
         </div>
-        {/* Add New Students Button */}
+
         <div style={{ textAlign: "right", marginTop: "20px" }}>
-          <button onClick={toggleModal} className="btn btn-success text-white">
-            Add New Student
-          </button>
+          <button onClick={toggleModal} className="btn btn-success text-white">Add New Student</button>
         </div>
-      </div>
 
-      {showModal && (
-        <AddStudentModal
-          form={studentForm}
-          onSubmit={addStudentRecord}
-          onChange={handleChange}
-          toggleModal={toggleModal}
-          errorMsg={errorMessage}
-        />
-      )}
-
-    </div>
+        {showModal && (
+          <AddStudentModal
+            form={studentForm}
+            onSubmit={addStudentRecord}
+            toggleModal={toggleModal}
+            errorMsg={errorMessage}
+            setForm={setStudentForm}
+          />
+        )}
+      </Table>
+    </>
   );
 };
 
