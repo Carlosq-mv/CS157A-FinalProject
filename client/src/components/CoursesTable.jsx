@@ -13,7 +13,7 @@ const CoursesTable = ({ courses, getCourseRecords }) => {
   const [deleteModal, setDeleteModal] = useState(false)
   const [editModal, setEditModal] = useState(false)
   const [selectedCourse, setSelectedCourse] = useState(null)
-  const [editCourseForm, setEditCourseFrom] = useState({
+  const [form, setForm] = useState({
     courseId: "",
     courseName: "",
     section: "",
@@ -22,10 +22,10 @@ const CoursesTable = ({ courses, getCourseRecords }) => {
 
   // put request to edit a certain course
   const editCourseRecord = (id) => {
-    Axios.put(`/api/course/update-course/${id}`, editCourseForm)
+    Axios.put(`/api/course/update-course/${id}`, form)
       .then(res => {
         // clear the form after successfull edit
-        setEditCourseFrom({
+        setForm({
           courseId: "",
           courseName: "",
           section: "",
@@ -63,7 +63,7 @@ const CoursesTable = ({ courses, getCourseRecords }) => {
 
   // populate the edit form modal with the selected course
   const handleEditCourse = (course) => {
-    setEditCourseFrom({
+    setForm({
       courseId: course.courseId,
       courseName: course.courseName,
       section: course.section,
@@ -88,11 +88,6 @@ const CoursesTable = ({ courses, getCourseRecords }) => {
       deleteCourseRecord(selectedCourse)
       setSelectedCourse(null)
     }
-  }
-
-  // function to change the form values
-  const handleChange = (key, value) => {
-    setEditCourseFrom({ ...editCourseForm, [key]: value });
   }
 
   // function to hide or show deleteModal
@@ -155,10 +150,10 @@ const CoursesTable = ({ courses, getCourseRecords }) => {
 
       {editModal && (
         <EditCourseModal
-          form={editCourseForm}
-          onChange={handleChange}
+          form={form}
+          setForm={setForm}
           onSubmit={editCourseRecord}
-          onCancel={() => {
+          toggleModal={() => {
             setEditModal(false)
             setErrorMessage("")
           }}
