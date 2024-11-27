@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import Axios from '../../constants/api';
+import DeleteModal from "../modals/DeleteModal"
 
 const EnrollmentsTable = ({ enrollments, getRecords }) => {
   const [deleteModal, setDeleteModal] = useState(false)
@@ -18,36 +19,36 @@ const EnrollmentsTable = ({ enrollments, getRecords }) => {
   // form here
 
   // put request to edit an enrollment record 
-  const editEnrollmentRecord = (id) => {
-    Axios.put("")
-      .then(res => {
-        console.log(res)
-        // clear the form here
-        setForm({
-          enrollmentId: "",
-          studentName: "",
-          courseName: "",
-          courseSection: "",
-          courseCredits: "",
-          enrollmentDate: "",
-        })
-        setErrorMessage("")
-        // get new updated records to be displayed on table
-        getRecords()
-        // hide the modal
-        setEditModal(false)
-      })
-      .catch(err => {
-        // log the error
-        console.log(err)
-        // set error message
-        setErrorMessage(err.response.data)
-      })
-  }
+  // const editEnrollmentRecord = (id) => {
+  //   Axios.put("")
+  //     .then(res => {
+  //       console.log(res)
+  //       // clear the form here
+  //       setForm({
+  //         enrollmentId: "",
+  //         studentName: "",
+  //         courseName: "",
+  //         courseSection: "",
+  //         courseCredits: "",
+  //         enrollmentDate: "",
+  //       })
+  //       setErrorMessage("")
+  //       // get new updated records to be displayed on table
+  //       getRecords()
+  //       // hide the modal
+  //       setEditModal(false)
+  //     })
+  //     .catch(err => {
+  //       // log the error
+  //       console.log(err)
+  //       // set error message
+  //       setErrorMessage(err.response.data)
+  //     })
+  // }
 
   // delete request for enrollments
   const deleteEnrollmentRecord = (id) => {
-    Axios.delete("")
+    Axios.delete(`/api/enrollments/delete-enrollment/${id}`)
       .then(res => {
         // upon deletion, show the updated table
         getRecords()
@@ -63,18 +64,18 @@ const EnrollmentsTable = ({ enrollments, getRecords }) => {
   }
 
   // populate the edit modal with the selected record
-  const handleEditEnrollment = (enrollment) => {
-    setForm({
-      enrollmentId: enrollment.enrollmentId,
-      studentName: enrollment.studentName,
-      courseName: enrollment.courseName,
-      courseSection: enrollment.courseSection,
-      courseSection: enrollment.courseSection,
-      enrollmentDate: enrollment.enrollmentDate
-    })
-    // show the moda
-    setEditModal(true)
-  }
+  // const handleEditEnrollment = (enrollment) => {
+  //   setForm({
+  //     enrollmentId: enrollment.enrollmentId,
+  //     studentName: enrollment.studentName,
+  //     courseName: enrollment.courseName,
+  //     courseSection: enrollment.courseSection,
+  //     courseSection: enrollment.courseSection,
+  //     enrollmentDate: enrollment.enrollmentDate
+  //   })
+  //   // show the moda
+  //   setEditModal(true)
+  // }
 
   // handles when the user clicks delete 
   const handleDeleteClick = (id) => {
@@ -129,12 +130,12 @@ const EnrollmentsTable = ({ enrollments, getRecords }) => {
                 <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{enrollment.courseCredits}</td>
                 <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{enrollment.enrollmentDate}</td>
                 <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>
-                  <button
+                  {/* <button
                     style={{ background: "transparent", border: "none", cursor: "pointer", margin: "0 5px", color: "#007bff" }}
                     onClick={() => handleEditEnrollment(enrollment)}
                   >
                     <FaRegEdit size={20} />
-                  </button>
+                  </button> */}
                   <button
                     style={{ background: "transparent", border: "none", cursor: "pointer", margin: "0 5px", color: "#dc3545" }}
                     onClick={() => handleDeleteClick(enrollment.enrollmentId)}
@@ -154,15 +155,16 @@ const EnrollmentsTable = ({ enrollments, getRecords }) => {
         </tbody>
       </table>
 
-      {/* {deleteModal && (
+      {deleteModal && (
         <DeleteModal
-          title={"Delete Student"}
-          message={"Are you sure you want to delete this student record?"}
+          title={"Delete Enrollment"}
+          message={"Are you sure you want to delete this enrollment record?"}
           toggleModal={toggleModal}
           onDelete={handleConfirmDelete}
         />
       )}
 
+      {/*
       {editModal && (
         <EditStudentModal
           form={editStudentForm}
