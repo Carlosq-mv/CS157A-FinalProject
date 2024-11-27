@@ -10,12 +10,80 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.cs157a.backend.config.DBConnection;
+import com.cs157a.backend.dto.EnrollmentDetails;
 import com.cs157a.backend.model.Enrollment;
 
 @Repository
 public class EnrollmentDAO {
     // singleton instance for database connection management
     private DBConnection dbConnection = DBConnection.getInstance();
+    
+    public boolean enrollmentExists(Long studentId, Long courseId) {
+    	String sql = "SELECT COUNT(*) FROM Enrollments WHERE StudentID = ? AND  CourseID = ?";
+    	 try(PreparedStatement preparedStatement = dbConnection.getMySqlConnection().prepareStatement(sql)) {
+    		// Set the query parameters
+	        preparedStatement.setLong(1, studentId);
+	        preparedStatement.setLong(2, courseId);
+	        
+	        // Execute the query
+	        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+	            if (resultSet.next()) {
+	                // check if the count is greater than 0
+	                return resultSet.getInt(1) > 0;
+	            }
+	        }
+    	 } catch (SQLException e) {
+             e.printStackTrace();
+         }
+    	 return false;
+    }
+
+    public List<EnrollmentDetails> getEnrollmentDetails() {
+        List<EnrollmentDetails> details = new ArrayList<>();
+        
+        String sql = """
+           SELECT 
+			    Students.StudentID,
+			    Enrollments.EnrollmentID,
+			    Students.Name AS StudentName,
+			    Courses.CourseName AS CourseName,
+			    Courses.Section AS CourseSection,
+			    Courses.Credits AS CourseCredits,
+			    Enrollments.EnrollmentDate
+			FROM 
+			    Enrollments
+			INNER JOIN 
+			    Students ON Enrollments.StudentID = Students.StudentID
+			INNER JOIN 
+			    Courses ON Enrollments.CourseID = Courses.CourseID
+			ORDER BY 
+			    Courses.CourseName, Courses.Section;
+        """;
+        try(PreparedStatement preparedStatement = dbConnection.getMySqlConnection().prepareStatement(sql)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                EnrollmentDetails enrollmentDetails = new EnrollmentDetails();
+
+                // Extract data from the ResultSet
+                enrollmentDetails.setStudentId(resultSet.getLong("StudentID"));
+                enrollmentDetails.setEnrollmentId(resultSet.getLong("EnrollmentID"));
+                enrollmentDetails.setStudentName(resultSet.getString("StudentName"));
+                enrollmentDetails.setCourseName(resultSet.getString("CourseName"));
+                enrollmentDetails.setCourseSection(resultSet.getInt("CourseSection"));
+                enrollmentDetails.setCourseCredits(resultSet.getInt("CourseCredits"));
+                enrollmentDetails.setEnrollmentDate(resultSet.getDate("EnrollmentDate").toLocalDate());
+
+                // Add to the list
+                details.add(enrollmentDetails);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return details;
+
+    }
 
     // Retrieve all enrollments
     public List<Enrollment> getRecords() {

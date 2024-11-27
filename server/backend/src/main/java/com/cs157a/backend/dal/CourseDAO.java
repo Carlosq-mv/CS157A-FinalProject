@@ -21,7 +21,7 @@ public class CourseDAO {
         List<Course> courses = new ArrayList<>();
         
         // sql query
-        String sql = "SELECT * FROM Courses";
+        String sql = "SELECT * FROM Courses ORDER BY Courses.CourseName, Courses.Section";
 
         try (PreparedStatement preparedStatement = dbConnection.getMySqlConnection().prepareStatement(sql)) {
             // query results
@@ -40,6 +40,36 @@ public class CourseDAO {
         }
         return courses;
     }
+    
+    public Course getCourseByNameAndSection(String courseName, int courseSection) {
+        String sql = "SELECT CourseID, CourseName, Section, Credits FROM Courses WHERE CourseName = ? AND Section = ?";
+        
+        try (PreparedStatement preparedStatement = dbConnection.getMySqlConnection().prepareStatement(sql)) {
+            // Set the query parameters
+            preparedStatement.setString(1, courseName);
+            preparedStatement.setInt(2, courseSection);
+            
+            // Execute the query
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    // Map the result set to a Course object
+                    return new Course(
+                        resultSet.getLong("CourseID"),
+                        resultSet.getString("CourseName"),
+                        resultSet.getInt("Section"),
+                        resultSet.getInt("Credits")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to fetch course by name and section.");
+        }
+        
+        // If no course is found, return null or throw a custom exception
+        return null;
+    }
+
 
     public void addRecord(Course course) {
         // sql query
