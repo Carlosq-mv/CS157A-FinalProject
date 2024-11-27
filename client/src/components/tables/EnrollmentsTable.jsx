@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import Axios from '../../constants/api';
 import DeleteModal from "../modals/DeleteModal"
+import { MdDeleteForever } from 'react-icons/md';
 
 const EnrollmentsTable = ({ enrollments, getRecords }) => {
   const [deleteModal, setDeleteModal] = useState(false)
@@ -9,16 +10,13 @@ const EnrollmentsTable = ({ enrollments, getRecords }) => {
   const [selectedEnrollment, setSelectedEnrollment] = useState(null)
   const [errorMessage, setErrorMessage] = useState("")
   const [form, setForm] = useState({
-    enrollmentId: "",
-    studentName: "",
+    studentId: "",
     courseName: "",
-    courseSection: "",
-    courseCredits: "",
-    enrollmentDate: "",
+    courseSection: ""
   })
   // form here
 
-  // put request to edit an enrollment record 
+  // put request to edit an enrollment record
   // const editEnrollmentRecord = (id) => {
   //   Axios.put("")
   //     .then(res => {
@@ -48,9 +46,10 @@ const EnrollmentsTable = ({ enrollments, getRecords }) => {
 
   // delete request for enrollments
   const deleteEnrollmentRecord = (id) => {
-    Axios.delete(`/api/enrollments/delete-enrollment/${id}`)
+    Axios.delete(`/api/enrollment/delete-enrollment/${id}`)
       .then(res => {
         // upon deletion, show the updated table
+        console.log(res)
         getRecords()
       })
       .catch(err => {
@@ -77,7 +76,7 @@ const EnrollmentsTable = ({ enrollments, getRecords }) => {
   //   setEditModal(true)
   // }
 
-  // handles when the user clicks delete 
+  // handles when the user clicks delete
   const handleDeleteClick = (id) => {
     // set the id of the chosen record
     setSelectedEnrollment(id)
@@ -95,10 +94,6 @@ const EnrollmentsTable = ({ enrollments, getRecords }) => {
     }
   }
 
-  // function to change the form values
-  const handleChange = (key, value) => {
-    setForm({ ...form, [key]: value })
-  }
 
   // hide or show delete modal
   const toggleModal = () => {
@@ -112,23 +107,25 @@ const EnrollmentsTable = ({ enrollments, getRecords }) => {
       <table style={{ width: "100%", borderCollapse: "collapse", color: "black" }}>
         <thead>
           <tr style={{ backgroundColor: "#f1f1f1", textAlign: "left" }}>
-            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Student Name</th>
-            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Course Name</th>
-            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Course Section</th>
-            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Course Credits</th>
-            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Enrollment Date</th>
+            <th style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>Student ID</th>
+            <th style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>Student Name</th>
+            <th style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>Course Name</th>
+            <th style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>Course Section</th>
+            <th style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>Course Credits</th>
+            <th style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>Enrollment Date</th>
             <th style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>Action</th>
           </tr>
         </thead>
         <tbody>
           {enrollments && enrollments.length > 0 ? (
-            students.map((enrollment, index) => (
+            enrollments.map((enrollment, index) => (
               <tr key={index}>
-                <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{enrollment.studentName}</td>
-                <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{enrollment.courseName}</td>
-                <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{enrollment.courseSection}</td>
-                <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{enrollment.courseCredits}</td>
-                <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{enrollment.enrollmentDate}</td>
+                <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>{enrollment.studentId}</td>
+                <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>{enrollment.studentName}</td>
+                <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>{(enrollment.courseName).toUpperCase()}</td>
+                <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>{enrollment.courseSection}</td>
+                <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>{enrollment.courseCredits + ".00"}</td>
+                <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>{enrollment.enrollmentDate}</td>
                 <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>
                   {/* <button
                     style={{ background: "transparent", border: "none", cursor: "pointer", margin: "0 5px", color: "#007bff" }}

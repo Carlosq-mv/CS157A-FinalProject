@@ -9,7 +9,11 @@ const Enrollments = () => {
   const [showModal, setShowModal] = useState(false)
   const [enrollments, setEnrollments] = useState([])
   const [errorMessage, setErrorMessage] = useState(false)
-  const [form, setForm] = useState({})
+  const [form, setForm] = useState({
+    studentId: "",
+    courseName: "",
+    courseSection: ""
+  })
 
   const toggleModal = () => {
     setShowModal(!showModal)
@@ -29,12 +33,19 @@ const Enrollments = () => {
       })
   }
 
-  const addEnrollment = () => {
-    Axios.post("", form)
+  const addEnrollment = (e) => {
+    e.preventDefault();
+    console.log(form)
+    Axios.post("/api/enrollment/add-enrollment", form)
       .then((res) => {
         console.log(res)
         // TODO: 1. clear the form
-
+        setForm({
+          studentId: "",
+          courseName: "",
+          courseSection: ""
+        })
+        getEnrollments()
         // 2. clear the error messages
         setErrorMessage("")
         // 3. hide modal
@@ -57,11 +68,11 @@ const Enrollments = () => {
         icon={<BsClipboardData className="h-6 w-6 shrink-0 stroke-current" />}
       >
         <div style={{ maxHeight: "620px", overflowY: "auto", border: "1px solid #ddd" }}>
-          {/* <StudentsTable students={students} getStudentRecords={getStudentRecords} /> */}
+          <EnrollmentsTable enrollments={enrollments} getRecords={getEnrollments} />
         </div>
         <div style={{ textAlign: "right", marginTop: "20px" }}>
           <button onClick={toggleModal} className="btn btn-success text-white">
-            Add New Student
+            Add Enrollment
           </button>
         </div>
         {showModal && (
