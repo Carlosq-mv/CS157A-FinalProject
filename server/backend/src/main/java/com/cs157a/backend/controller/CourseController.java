@@ -20,9 +20,26 @@ public class CourseController {
     // Create
     @PostMapping("/add-course")
     public ResponseEntity<?> addCourse(@RequestBody Course course) {
+        // check if the request body is null
+        if (course == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No course object.");
+        }
+
+        // check if any fields are empty
+        if (course.getCourseName() == null || course.getCourseName().isBlank()) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Please fill all form fields.");
+        }
+
+        // check the the sections and course are not zero or below
+        if (course.getSection() <= 0 || course.getCredits() <= 0) {
+            System.out.println(course);
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                    .body("Enter non-zero value for section and(or) credits.");
+        }
+
         // add new course record
         courseDAO.addRecord(course);
-        
+
         // return the new course record
         return ResponseEntity.status(HttpStatus.CREATED).body(course);
     }
@@ -31,7 +48,7 @@ public class CourseController {
     @GetMapping("/all-courses")
     public ResponseEntity<?> getCourses() {
         List<Course> courses = courseDAO.getRecords();
-        
+
         // return the records if they exist
         if (!courses.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(courses);
@@ -44,18 +61,29 @@ public class CourseController {
     // Update
     @PutMapping("/update-course/{id}")
     public ResponseEntity<?> updateCourse(@PathVariable Long id, @RequestBody Course course) {
-        
+
         // check if the course exists in database (by id)
         if (!courseDAO.exists(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course not found.");
         }
-        
-        //set the id
+
+        // check if any fields are empty
+        if (course.getCourseName() == null || course.getCourseName().isBlank()) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Please fill all form fields.");
+        }
+
+        // check the the sections and course are not zero
+        if (course.getSection() <= 0 || course.getCredits() <= 0) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                    .body("Enter non-zero value for section and(or) credits.");
+        }
+
+        // set the id
         course.setCourseId(id);
-        
+
         // call dao method to update the record
         courseDAO.updateRecord(course);
-        
+
         // return the updated course record
         return ResponseEntity.status(HttpStatus.OK).body(course);
     }
@@ -63,7 +91,7 @@ public class CourseController {
     // Delete
     @DeleteMapping("/delete-course/{id}")
     public ResponseEntity<?> deleteCourse(@PathVariable Long id) {
-        
+
         // check if the course exists in database (by id)
         if (!courseDAO.exists(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course not found.");
@@ -71,7 +99,7 @@ public class CourseController {
 
         // delete the course record
         courseDAO.deleteRecord(id);
-        
+
         // return success message
         return ResponseEntity.status(HttpStatus.OK).body("Course deleted successfully.");
     }
@@ -79,7 +107,7 @@ public class CourseController {
     // get course by id
     @GetMapping("/get-course/{id}")
     public ResponseEntity<?> getCourseById(@PathVariable Long id) {
-        
+
         // check if the course exists in database (by id)
         if (!courseDAO.exists(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course does not exist.");

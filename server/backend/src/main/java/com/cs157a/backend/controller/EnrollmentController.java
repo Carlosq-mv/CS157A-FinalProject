@@ -1,5 +1,6 @@
 package com.cs157a.backend.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +8,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.cs157a.backend.dal.CourseDAO;
 import com.cs157a.backend.dal.EnrollmentDAO;
+import com.cs157a.backend.dal.StudentDAO;
+import com.cs157a.backend.dto.EnrollmentForm;
+import com.cs157a.backend.model.Course;
 import com.cs157a.backend.model.Enrollment;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/enrollment")
@@ -16,12 +24,47 @@ public class EnrollmentController {
 
     @Autowired
     private EnrollmentDAO enrollmentDAO;
+    
+    @Autowired
+    private StudentDAO studentDAO;
+    
+    @Autowired 
+    private CourseDAO courseDAO;
+    
+
+    @GetMapping("/enrollment-details")
+    public ResponseEntity<?> getEnrollmentDetails(@RequestParam(required = false) String param) {
+        return ResponseEntity.status(200).body(enrollmentDAO.getEnrollmentDetails());
+    }
+    
 
     // Create
     @PostMapping("/add-enrollment")
-    public ResponseEntity<?> addEnrollment(@RequestBody Enrollment enrollment) {
+    public ResponseEntity<?> addEnrollment(@RequestBody EnrollmentForm enrollment) {
+    	System.out.println(enrollment.getCourseName() + " " + enrollment.getCourseSection() + " " + enrollment.getStudentId());
+    	// check if the student exists
+    	if(!studentDAO.exists(enrollment.getStudentId())) {
+    		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Student does not exitst.");
+    	}
+    	
+    	// get the course from the enrollment form
+    	Course c = courseDAO.getCourseByNameAndSection(enrollment.getCourseName(), enrollment.getCourseSection());
+    	
+    	// check if the course exist
+    	if(c == null) {
+    		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Course does not exitst.");
+    	}
+    	
+    	// check if there is already a student enrolled into a course
+    	if(enrollmentDAO.enrollmentExists(enrollment.getStudentId(), c.getCourseId())) {
+    		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Student already enrolled in this course.");
+    	}
+    	
+    	// create Enrollment object
+    	Enrollment e = new Enrollment(null, enrollment.getStudentId(), c.getCourseId(), LocalDate.now());
+    
         // Add new enrollment record
-        enrollmentDAO.addRecord(enrollment);
+        enrollmentDAO.addRecord(e);
 
         // Return the new enrollment record
         return ResponseEntity.status(HttpStatus.CREATED).body(enrollment);

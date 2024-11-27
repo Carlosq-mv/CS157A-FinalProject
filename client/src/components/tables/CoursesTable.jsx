@@ -3,16 +3,17 @@ import { useState } from 'react';
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 
-import Axios from '../constants/api';
-import DeleteModal from './modals/DeleteModal';
-import EditCourseModal from './modals/EditCourseModal';
+import Axios from '../../constants/api';
+import DeleteModal from '../modals/DeleteModal';
+import EditCourseModal from '../modals/EditCourseModal';
 
 
 const CoursesTable = ({ courses, getCourseRecords }) => {
+  const [errorMessage, setErrorMessage] = useState("")
   const [deleteModal, setDeleteModal] = useState(false)
   const [editModal, setEditModal] = useState(false)
   const [selectedCourse, setSelectedCourse] = useState(null)
-  const [editCourseForm, setEditCourseFrom] = useState({
+  const [form, setForm] = useState({
     courseId: "",
     courseName: "",
     section: "",
@@ -21,15 +22,16 @@ const CoursesTable = ({ courses, getCourseRecords }) => {
 
   // put request to edit a certain course
   const editCourseRecord = (id) => {
-    Axios.put(`/api/course/update-course/${id}`, editCourseForm)
+    Axios.put(`/api/course/update-course/${id}`, form)
       .then(res => {
         // clear the form after successfull edit
-        setEditCourseFrom({
+        setForm({
           courseId: "",
           courseName: "",
           section: "",
           credits: ""
         })
+        setErrorMessage("")
         // get the new updated record to display on table
         getCourseRecords()
         // hide the modal
@@ -38,6 +40,7 @@ const CoursesTable = ({ courses, getCourseRecords }) => {
       .catch(err => {
         // log errors
         console.log(err)
+        setErrorMessage(err.response.data)
       })
   }
 
@@ -60,7 +63,7 @@ const CoursesTable = ({ courses, getCourseRecords }) => {
 
   // populate the edit form modal with the selected course
   const handleEditCourse = (course) => {
-    setEditCourseFrom({
+    setForm({
       courseId: course.courseId,
       courseName: course.courseName,
       section: course.section,
@@ -87,14 +90,9 @@ const CoursesTable = ({ courses, getCourseRecords }) => {
     }
   }
 
-  // function to change the form values
-  const handleChange = (key, value) => {
-    setEditCourseFrom({ ...editCourseForm, [key]: value });
-  }
-
   // function to hide or show deleteModal
   const toggleModal = () => {
-    setDeleteModal(!deleteModal);
+    setDeleteModal(!deleteModal)
   }
 
   return (
@@ -152,10 +150,14 @@ const CoursesTable = ({ courses, getCourseRecords }) => {
 
       {editModal && (
         <EditCourseModal
-          form={editCourseForm}
-          onChange={handleChange}
+          form={form}
+          setForm={setForm}
           onSubmit={editCourseRecord}
-          onCancel={() => setEditModal(false)}
+          toggleModal={() => {
+            setEditModal(false)
+            setErrorMessage("")
+          }}
+          errorMsg={errorMessage}
         />
       )}
     </>

@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 
-import Axios from '../constants/api';
-import DeleteModal from './modals/DeleteModal';
-import EditStudentModal from './modals/EditStudentModal';
+import Axios from '../../constants/api';
+import DeleteModal from '../modals/DeleteModal';
+import EditStudentModal from '../modals/EditStudentModal';
 
 
 const StudentsTable = ({ students, getStudentRecords }) => {
@@ -13,7 +13,7 @@ const StudentsTable = ({ students, getStudentRecords }) => {
   const [errorMessage, setErrorMessage] = useState("")
   const [editModal, setEditModal] = useState(false)
   const [selectedStudent, setSelectedStudent] = useState(null)
-  const [editStudentForm, setEditStudentForm] = useState({
+  const [form, setForm] = useState({
     studentId: "",
     name: "",
     dateOfBirth: "",
@@ -23,10 +23,10 @@ const StudentsTable = ({ students, getStudentRecords }) => {
 
   // put request to edit a certain student
   const editStudentRecord = (id) => {
-    Axios.put(`/api/student/update-student/${id}`, editStudentForm)
+    Axios.put(`/api/student/update-student/${id}`, form)
       .then(res => {
         // clear the from after succcessfull edit
-        setEditStudentForm({
+        setForm({
           studentId: "",
           name: "",
           dateOfBirth: "",
@@ -66,7 +66,7 @@ const StudentsTable = ({ students, getStudentRecords }) => {
 
   // populate the edit modal with the selected student 
   const handleEditStudent = (student) => {
-    setEditStudentForm({
+    setForm({
       studentId: student.studentId,
       name: student.name,
       dateOfBirth: student.dateOfBirth,
@@ -93,11 +93,6 @@ const StudentsTable = ({ students, getStudentRecords }) => {
       // clear selected student
       setSelectedStudent(null)
     }
-  }
-
-  // function to change the form values
-  const handleChange = (key, value) => {
-    setEditStudentForm({ ...editStudentForm, [key]: value });
   }
 
   // function to hide or show delete modal
@@ -164,14 +159,14 @@ const StudentsTable = ({ students, getStudentRecords }) => {
 
       {editModal && (
         <EditStudentModal
-          form={editStudentForm}
-          onChange={handleChange}
+          form={form}
           onSubmit={editStudentRecord}
-          onCancel={() => {
+          toggleModal={() => {
             setEditModal(false)
             setErrorMessage("")
           }}
           errorMsg={errorMessage}
+          setForm={setForm}
         />
       )}
 

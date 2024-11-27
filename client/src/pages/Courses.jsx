@@ -3,14 +3,16 @@ import { useState, useEffect } from "react"
 import { PiBookOpenTextBold } from "react-icons/pi"
 
 import Axios from "../constants/api"
-import CoursesTable from "../components/CoursesTable"
+import CoursesTable from "../components/tables/CoursesTable"
 import AddCourseModal from "../components/modals/AddCourseModal"
+import Table from "../components/Table"
 
 
 const Courses = () => {
+  const [errorMessage, setErrorMessage] = useState("")
   const [showModal, setShowModal] = useState(false)
   const [courses, setCourses] = useState([])
-  const [courseForm, setCourseForm] = useState({
+  const [form, setForm] = useState({
     courseId: "",
     courseName: "",
     section: "",
@@ -35,19 +37,20 @@ const Courses = () => {
 
     // change section and credits to type Number
     const payload = {
-      ...courseForm,
-      section: Number(courseForm.section),
-      credts: Number(courseForm.credits)
+      ...form,
+      section: Number(form.section),
+      credts: Number(form.credits)
     }
 
     Axios.post("/api/course/add-course", payload)
       .then(res => {
         // clear form 
-        setCourseForm({
+        setForm({
           courseName: "",
           section: "",
           credits: ""
         })
+        setErrorMessage("")
         // show the update table
         getCourses()
         // hide the modal
@@ -56,17 +59,16 @@ const Courses = () => {
       .catch(err => {
         // log errors
         console.log(err)
+        setErrorMessage(err.response.data)
       })
   }
 
-  // function to change the form values
-  const handleChange = (key, value) => {
-    setCourseForm({ ...courseForm, [key]: value });
-  }
-  
   // function to toggle modal for adding new course form 
   const toggleModal = () => {
-    setShowModal(!showModal);
+    setShowModal(!showModal)
+    if (!showModal) {
+      setErrorMessage("")
+    }
   }
 
   // when component mounts, get course records from database
@@ -76,34 +78,28 @@ const Courses = () => {
 
   return (
     <>
-      <div style={{ fontFamily: "Arial, sans-serif", maxWidth: "1200px", margin: "20px auto", border: "1px solid #ccc", borderRadius: "10px", padding: "20px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)" }}>
-
-        <div role="alert" className="alert alert-info rounded-md">
-          <PiBookOpenTextBold className="h-6 w-6 shrink-0 stroke-current" />
-          <span className="font-abril text-xl">Courses</span>
+      <Table
+        title={"Courses"}
+        icon={<PiBookOpenTextBold className="h-6 w-6 shrink-0 stroke-current" />}
+      >
+        <div style={{ maxHeight: "620px", overflowY: "auto", border: "1px solid #ddd" }}>
+          <CoursesTable courses={courses} getCourseRecords={getCourses} />
         </div>
 
-        <div style={{ padding: "20px", backgroundColor: "#f9f9f9", borderRadius: "5px 5px 5px 5px" }}>
-
-          <div style={{ maxHeight: "620px", overflowY: "auto", border: "1px solid #ddd" }}>
-            <CoursesTable courses={courses} getCourseRecords={getCourses} />
-          </div>
-
-          <div style={{ textAlign: "right", marginTop: "20px" }}>
-            <button onClick={toggleModal} className="btn btn-success text-white">Add Course</button>
-          </div>
-
-          {showModal && (
-            <AddCourseModal
-              form={courseForm}
-              onSubmit={addCourse}
-              onChange={handleChange}
-              toggleModal={toggleModal}
-            />
-          )}
-
+        <div style={{ textAlign: "right", marginTop: "20px" }}>
+          <button onClick={toggleModal} className="btn btn-success text-white">Add Course</button>
         </div>
-      </div>
+
+        {showModal && (
+          <AddCourseModal
+            form={form}
+            onSubmit={addCourse}
+            toggleModal={toggleModal}
+            errorMsg={errorMessage}
+            setForm={setForm}
+          />
+        )}
+      </Table>
     </>
   )
 }
