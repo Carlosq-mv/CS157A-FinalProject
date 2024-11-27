@@ -1,10 +1,11 @@
 import React from 'react'
+import { GoHomeFill } from "react-icons/go";
 
 // TODO: add all links when pages are complete
 const NavBar = () => {
   return (
     <>
-      <div className="navbar bg-base-100" style={{ backgroundColor: '#606060' }}>
+      <div className="navbar bg-base-100" style={{ backgroundColor: '#2C3539' }}>
         <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -31,7 +32,7 @@ const NavBar = () => {
               <li><a>Grades</a></li>
             </ul>
           </div>
-          <a href="/home" className="btn btn-ghost text-2xl font-abril">Student Center</a>
+          <a href="/home" className="btn btn-ghost text-2xl font-abril"><GoHomeFill/>Student Center</a>
         </div>
 
         <div className="navbar-center hidden lg:flex">
