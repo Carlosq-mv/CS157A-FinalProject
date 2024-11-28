@@ -6,6 +6,8 @@ import Home from "./pages/Home";
 import Students from "./pages/Students";
 import Courses from "./pages/Courses";
 import Enrollments from "./pages/Enrollments";
+import ProtectedRoutes from "./components/ProtectedRoutes";
+import { Navigate } from "react-router-dom";
 
 // all routes used in web app lie here
 function App() {
@@ -14,10 +16,15 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/students" element={<Students />} />
-          <Route path="/courses" element={<Courses />} />
-          <Route path="/enrollments" element={<Enrollments />} />
+
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/students" element={<Students />} />
+            <Route path="/courses" element={<Courses />} />
+            <Route path="/enrollments" element={<Enrollments />} />
+          </Route>
+
+          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </Layout>
     </>
