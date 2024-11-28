@@ -36,6 +36,12 @@ public class CourseController {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
                     .body("Enter non-zero value for section and(or) credits.");
         }
+        
+        // check that course is not a duplicate
+        Course c = courseDAO.getCourseByNameAndSection(course.getCourseName(), course.getSection());
+        if(c != null) {
+        	return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body("Course already exists. Try again.");
+        }
 
         // add new course record
         courseDAO.addRecord(course);
