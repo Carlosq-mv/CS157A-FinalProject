@@ -41,10 +41,12 @@ public class EnrollmentController {
     // Create
     @PostMapping("/add-enrollment")
     public ResponseEntity<?> addEnrollment(@RequestBody EnrollmentForm enrollment) {
-    	System.out.println(enrollment.getCourseName() + " " + enrollment.getCourseSection() + " " + enrollment.getStudentId());
+        if (enrollment == null || enrollment.getCourseName() == null || enrollment.getCourseName().isBlank() || enrollment.getCourseSection() == 0) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Please fill all form details.");
+        }
     	// check if the student exists
     	if(!studentDAO.exists(enrollment.getStudentId())) {
-    		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Student does not exitst.");
+    		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Student does not exist.");
     	}
     	
     	// get the course from the enrollment form
