@@ -1,8 +1,11 @@
 import React from 'react'
 import { GoHomeFill } from "react-icons/go";
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthProvider';
 
 // TODO: add all links when pages are complete
 const NavBar = () => {
+  const {logout} = useContext(AuthContext)
   return (
     <>
       <div className="navbar bg-base-100" style={{ backgroundColor: '#2C3539' }}>
@@ -48,7 +51,7 @@ const NavBar = () => {
         </div>
 
         <div className="navbar-end">
-          <a className="btn bg-red-700 font-black hover:bg-red-800">Logout</a>
+          <button onClick={logout} className="btn bg-red-700 font-black hover:bg-red-800">Logout</button>
         </div>
       </div>
     </>
