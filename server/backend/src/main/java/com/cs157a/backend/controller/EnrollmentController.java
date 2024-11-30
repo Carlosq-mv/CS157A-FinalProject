@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.*;
 
 import com.cs157a.backend.dal.CourseDAO;
 import com.cs157a.backend.dal.EnrollmentDAO;
+import com.cs157a.backend.dal.GradeDAO;
 import com.cs157a.backend.dal.StudentDAO;
 import com.cs157a.backend.dto.EnrollmentForm;
 import com.cs157a.backend.model.Course;
 import com.cs157a.backend.model.Enrollment;
+import com.cs157a.backend.model.Grade;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -30,6 +33,9 @@ public class EnrollmentController {
     
     @Autowired 
     private CourseDAO courseDAO;
+
+    @Autowired
+    private GradeDAO gradeDAO;
     
 
     @GetMapping("/enrollment-details")
@@ -67,6 +73,10 @@ public class EnrollmentController {
     
         // Add new enrollment record
         enrollmentDAO.addRecord(e);
+
+        // after succesfully adding an enrollment, add default grade values to it
+        Grade g = new Grade(e.getEnrollmentId(), "NA");
+        gradeDAO.addRecord(g);
 
         // Return the new enrollment record
         return ResponseEntity.status(HttpStatus.CREATED).body(enrollment);
