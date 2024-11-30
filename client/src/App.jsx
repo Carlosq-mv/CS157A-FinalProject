@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Students from "./pages/Students";
 import Courses from "./pages/Courses";
 import Enrollments from "./pages/Enrollments";
+import Grades from "./pages/Grades";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import { Navigate } from "react-router-dom";
 
@@ -22,6 +23,7 @@ function App() {
             <Route path="/students" element={<Students />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/enrollments" element={<Enrollments />} />
+            <Route path="/grades" element={<Grades />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/login" />} />

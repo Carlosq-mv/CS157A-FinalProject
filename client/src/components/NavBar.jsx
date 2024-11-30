@@ -32,7 +32,7 @@ const NavBar = () => {
               <li><a href="/students">Students</a></li>
               <li><a href="/courses">Courses</a></li>
               <li><a href="/enrollments">Enrollments</a></li>
-              <li><a>Grades</a></li>
+              <li><a href="/grades">Grades</a></li>
             </ul>
           </div>
           <a href="/home" className="btn btn-ghost text-2xl font-abril"><GoHomeFill/>Student Center</a>
@@ -45,7 +45,7 @@ const NavBar = () => {
               <li><a href="/students">Students</a></li>
               <li><a href="/courses">Courses</a></li>
               <li><a href="/enrollments">Enrollments</a></li>
-              <li><a>Grades</a></li>
+              <li><a href="/grades">Grades</a></li>
             </ul>
           </div>
         </div>
