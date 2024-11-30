@@ -24,7 +24,8 @@ public class Constants {
             CourseID BIGINT AUTO_INCREMENT PRIMARY KEY,
             CourseName VARCHAR(100) NOT NULL,
             Section INT NOT NULL,
-            Credits BIGINT  NOT NULL
+            Credits BIGINT  NOT NULL,
+            UNIQUE (CourseName, Section)
         );
     """;
 
