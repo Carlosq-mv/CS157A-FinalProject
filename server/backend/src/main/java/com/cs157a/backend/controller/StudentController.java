@@ -138,6 +138,6 @@ public class StudentController {
         Student student = studentDAO.getRecordById(id);
 
         // return the student record
-        return ResponseEntity.status(HttpStatus.FOUND).body(student);
+        return ResponseEntity.status(HttpStatus.OK).body(student);
     }
 }

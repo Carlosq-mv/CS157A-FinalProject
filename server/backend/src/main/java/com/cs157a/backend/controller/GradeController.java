@@ -8,7 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.cs157a.backend.dal.GradeDAO;
+import com.cs157a.backend.dal.StudentDAO;
+import com.cs157a.backend.dto.GradingDetails;
 import com.cs157a.backend.model.Grade;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/grade")
@@ -16,6 +20,9 @@ public class GradeController {
 
     @Autowired
     private GradeDAO gradeDAO;
+
+    @Autowired
+    private StudentDAO studentDAO;
 
     @PostMapping("/add-grade")
     public ResponseEntity<?> addGrade(@RequestBody Grade grade) {
@@ -59,5 +66,34 @@ public class GradeController {
         }
         Grade grade = gradeDAO.getRecordById(id);
         return ResponseEntity.status(HttpStatus.OK).body(grade);
+    }
+
+
+    // get grading details with a student email
+    // TODO: look into pagination to limit the number of records returned if there is alot
+    @GetMapping("/get-details")
+    public ResponseEntity<?> getEnrollmentAndGradingDetails(@RequestParam String studentEmail) {
+        // check if there is not parameter or it is not in correct format
+        if (studentEmail == null || studentEmail.trim().isEmpty() || !studentEmail.contains("@")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or missing student email.");
+        }
+        // check if the student exists
+        if(!studentDAO.exists(studentEmail)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student does not exist.");
+        }
+
+        // get all the grading info
+        List<GradingDetails> details = gradeDAO.getGradeAndEnrollmentDetails(studentEmail);
+        // check if the student does have enrollments
+        if (details == null || details.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student is not currently enrolled in any courses.");
+        }
+
+        // check if the student does have details to return
+        if(details.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student is not currently enrolled in any courses.");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(details);
     }
 }

@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.*;
 
 import com.cs157a.backend.dal.CourseDAO;
 import com.cs157a.backend.dal.EnrollmentDAO;
+import com.cs157a.backend.dal.GradeDAO;
 import com.cs157a.backend.dal.StudentDAO;
 import com.cs157a.backend.dto.EnrollmentForm;
 import com.cs157a.backend.model.Course;
 import com.cs157a.backend.model.Enrollment;
+import com.cs157a.backend.model.Grade;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -30,6 +33,9 @@ public class EnrollmentController {
     
     @Autowired 
     private CourseDAO courseDAO;
+
+    @Autowired
+    private GradeDAO gradeDAO;
     
 
     @GetMapping("/enrollment-details")
@@ -41,10 +47,12 @@ public class EnrollmentController {
     // Create
     @PostMapping("/add-enrollment")
     public ResponseEntity<?> addEnrollment(@RequestBody EnrollmentForm enrollment) {
-    	System.out.println(enrollment.getCourseName() + " " + enrollment.getCourseSection() + " " + enrollment.getStudentId());
+        if (enrollment == null || enrollment.getCourseName() == null || enrollment.getCourseName().isBlank() || enrollment.getCourseSection() == 0) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Please fill all form details.");
+        }
     	// check if the student exists
     	if(!studentDAO.exists(enrollment.getStudentId())) {
-    		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Student does not exitst.");
+    		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Student does not exist.");
     	}
     	
     	// get the course from the enrollment form
@@ -65,6 +73,10 @@ public class EnrollmentController {
     
         // Add new enrollment record
         enrollmentDAO.addRecord(e);
+
+        // after succesfully adding an enrollment, add default grade values to it
+        Grade g = new Grade(e.getEnrollmentId(), "NA");
+        gradeDAO.addRecord(g);
 
         // Return the new enrollment record
         return ResponseEntity.status(HttpStatus.CREATED).body(enrollment);

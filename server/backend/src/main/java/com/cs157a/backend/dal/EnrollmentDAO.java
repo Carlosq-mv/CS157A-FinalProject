@@ -3,6 +3,7 @@ package com.cs157a.backend.dal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,11 +112,20 @@ public class EnrollmentDAO {
     public void addRecord(Enrollment enrollment) {
         String sql = "INSERT INTO Enrollments (StudentID, CourseID, EnrollmentDate) VALUES (?, ?, ?)";
 
-        try (PreparedStatement preparedStatement = dbConnection.getMySqlConnection().prepareStatement(sql)) {
+        try (PreparedStatement preparedStatement = dbConnection.getMySqlConnection().prepareStatement(sql,Statement.RETURN_GENERATED_KEYS )) {
             preparedStatement.setLong(1, enrollment.getStudentId());
             preparedStatement.setLong(2, enrollment.getCourseId());
             preparedStatement.setDate(3, java.sql.Date.valueOf(enrollment.getEnrollmentDate()));
             preparedStatement.executeUpdate();
+
+            // check if there is a generate key
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                // get the enrollment id of the new tuple inserted in database
+                Long enrollmentId = generatedKeys.getLong(1);
+                // set the enrollment it to the enrollment object
+                enrollment.setEnrollmentId(enrollmentId);;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

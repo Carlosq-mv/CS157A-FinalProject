@@ -128,6 +128,24 @@ public class StudentDAO {
         return false;
     }
 
+    public boolean exists(String email) {
+        // sql query
+        String sql = "SELECT * FROM Students WHERE Email = ?";
+
+        try (PreparedStatement preparedStatement = dbConnection.getMySqlConnection().prepareStatement(sql)) {
+            preparedStatement.setString(1, email);
+
+            // query results
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // check if there was a result to the query
+            return resultSet.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public Student getRecordById(Long studentId) {
         // sql query
         String sql = "SELECT * FROM Students WHERE StudentID = ?";
@@ -154,7 +172,7 @@ public class StudentDAO {
             e.printStackTrace();
         }
 
-        return null; 
+        return null;
     }
 
 }

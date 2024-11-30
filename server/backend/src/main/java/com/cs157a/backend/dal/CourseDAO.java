@@ -41,6 +41,7 @@ public class CourseDAO {
         return courses;
     }
     
+    
     public Course getCourseByNameAndSection(String courseName, int courseSection) {
         String sql = "SELECT CourseID, CourseName, Section, Credits FROM Courses WHERE CourseName = ? AND Section = ?";
         

@@ -1,10 +1,14 @@
 import React from 'react'
+import { GoHomeFill } from "react-icons/go";
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthProvider';
 
 // TODO: add all links when pages are complete
 const NavBar = () => {
+  const {logout} = useContext(AuthContext)
   return (
     <>
-      <div className="navbar bg-base-100" style={{ backgroundColor: '#606060' }}>
+      <div className="navbar bg-base-100" style={{ backgroundColor: '#2C3539' }}>
         <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -28,10 +32,10 @@ const NavBar = () => {
               <li><a href="/students">Students</a></li>
               <li><a href="/courses">Courses</a></li>
               <li><a href="/enrollments">Enrollments</a></li>
-              <li><a>Grades</a></li>
+              <li><a href="/grades">Grades</a></li>
             </ul>
           </div>
-          <a href="/home" className="btn btn-ghost text-2xl font-abril">Student Center</a>
+          <a href="/home" className="btn btn-ghost text-2xl font-abril"><GoHomeFill/>Student Center</a>
         </div>
 
         <div className="navbar-center hidden lg:flex">
@@ -41,13 +45,13 @@ const NavBar = () => {
               <li><a href="/students">Students</a></li>
               <li><a href="/courses">Courses</a></li>
               <li><a href="/enrollments">Enrollments</a></li>
-              <li><a>Grades</a></li>
+              <li><a href="/grades">Grades</a></li>
             </ul>
           </div>
         </div>
 
         <div className="navbar-end">
-          <a className="btn bg-red-700 font-black hover:bg-red-800">Logout</a>
+          <button onClick={logout} className="btn bg-red-700 font-black hover:bg-red-800">Logout</button>
         </div>
       </div>
     </>

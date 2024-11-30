@@ -15,12 +15,12 @@ public class AdminDAO {
     private DBConnection dbConnection = DBConnection.getInstance();
 
     public Admin getAdmin(Long adminId) {
-        // sql query 
+        // sql query
         String sql = "SELECT * FROM Administrators WHERE AdministratorID = ?";
 
         try (PreparedStatement preparedStatement = dbConnection.getMySqlConnection().prepareStatement(sql)) {
             preparedStatement.setLong(1, adminId);
-            
+
             // query results
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -34,4 +34,21 @@ public class AdminDAO {
         }
         return null;
     }
+
+    public Admin createAdmin(Admin admin) {
+        // sql query
+        String sql = "INSERT INTO Administrators (Password, AdministratorID) VALUES (?, ?)";
+        Admin a;
+        try (PreparedStatement stmt = dbConnection.getMySqlConnection().prepareStatement(sql)) {
+            stmt.setString(1, admin.getPassword()); // Set the password
+            stmt.setLong(2, admin.getAdminId()); // Set the username
+            stmt.executeUpdate();
+            a = new Admin(admin.getAdminId(), admin.getPassword());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return a;
+    }
+
 }
