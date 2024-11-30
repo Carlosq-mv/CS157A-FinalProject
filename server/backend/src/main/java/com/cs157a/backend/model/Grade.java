@@ -11,6 +11,11 @@ public class Grade {
     public Grade() {
     }
 
+    public Grade(Long enrollmentId, String grade) {
+        this.enrollmentId = enrollmentId;
+        this.grade = grade;
+    }
+
     public Grade(Long gradeId, Long enrollmentId, String grade, LocalDate gradingDate) {
         this.gradeId = gradeId;
         this.enrollmentId = enrollmentId;
