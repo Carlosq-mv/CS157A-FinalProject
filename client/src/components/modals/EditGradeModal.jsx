@@ -41,12 +41,37 @@ const EditGradeModal = ({ selectedDetails, form, setForm, onSubmit, toggleModal,
           onSubmit(selectedDetails.gradeId)
         }}
         >
-          <FormField
+          <div style={{ marginBottom: "10px", marginTop: "15px" }}>
+            <label style={{ color: "black" }}>
+              Grade: <span style={{ color: "red" }}>*</span>
+            </label>
+            <select
+              value={form.grade}
+              onChange={(e) => setForm({ ...form, grade: e.target.value })}
+              className="select select-bordered w-full bg-white text-black"
+            >
+              <option value="" disabled>Select Grade</option>
+              <option value="A+">A+</option>
+              <option value="A">A</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B">B</option>
+              <option value="B-">B-</option>
+              <option value="C+">C+</option>
+              <option value="C">C</option>
+              <option value="C-">C-</option>
+              <option value="D+">D+</option>
+              <option value="D">D</option>
+              <option value="D-">D-</option>
+              <option value="F">F</option>
+            </select>
+          </div>
+          {/* <FormField
             title={"Grade"}
             type={"text"}
             value={form.grade}
             onChange={(e) => setForm({ ...form, grade: e.target.value })}
-          />
+          /> */}
 
           <div className="modal-action gap-44 items-center flex justify-center">
             <button type="submit" className="btn btn-success text-white">
