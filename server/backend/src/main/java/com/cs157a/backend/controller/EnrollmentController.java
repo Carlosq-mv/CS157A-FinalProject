@@ -64,7 +64,7 @@ public class EnrollmentController {
     	}
     	
     	// check if there is already a student enrolled into a course
-    	if(enrollmentDAO.enrollmentExists(enrollment.getStudentId(), c.getCourseId())) {
+    	if(enrollmentDAO.enrollmentExists(enrollment.getStudentId(), c.getCourseName())) {
     		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Student already enrolled in this course.");
     	}
     	
