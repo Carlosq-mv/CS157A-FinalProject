@@ -4,10 +4,30 @@ import Table from "../components/Table"
 import { FaRegEdit } from "react-icons/fa";
 import { PiBooks } from "react-icons/pi";
 import { FaSearch } from "react-icons/fa";
+import EditGradeModal from "../components/modals/EditGradeModal";
+
+// courseName: ""
+// courseSection: ""
+// enrollmentDate: ""
+// enrollmentId: ""
+// grade: ""
+// gradeId: ""
+// gradingDate: ""
+// studentId: ""
+// studentName: ""
 
 const Grades = () => {
   const [email, setEmail] = useState("")
   const [details, setDetails] = useState()
+  const [editModal, setEditModal] = useState(false)
+  const [form, setForm] = useState({
+    grade: "",
+    gradeId: "",
+    enrollmentId: "",
+    gradingDate: ""
+  })
+  const [selectedDetails, setSelectedDetails] = useState(null)
+
 
   const searchStudent = () => {
     if (!email) {
@@ -21,9 +41,35 @@ const Grades = () => {
 
       })
       .catch((err) => {
-        console.error("Error fetching student:", err);
-      });
-  };
+        console.error("Error fetching student:", err)
+      })
+  }
+
+  const changeGrade = (id) => {
+    Axios.put(`/api/grade/update-grade/${id}`, form)
+      .then(res => {
+        console.log(res.data)
+        searchStudent()
+        setEditModal(false)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+  const handleEditCourse = (c) => {
+    setSelectedDetails(c)
+    setForm({
+      grade: c.grade,
+      gradeId: c.gradeId,
+      enrollmentId: c.enrollmentId,
+      gradingDate: c.gradingDate
+    })
+    setEditModal(true)
+  }
+
+  const toggleModal = () => {
+    setEditModal(!editModal)
+  }
   return (
     <>
       <div className="p-7 w-screen flex flex-col items-center">
@@ -44,7 +90,7 @@ const Grades = () => {
               />
             </figure>
 
-            <div className="sticky top-0 z-10 py-4 flex justify-center items-center space-x-2 pb-6">
+            <div className="sticky top-0  py-4 flex justify-center items-center space-x-2 pb-6">
               <input
                 type="text"
                 className="p-2 bg-white rounded border text-black border-gray-300 focus:outline-none focus:ring focus:ring-blue-300 w-full max-w-md"
@@ -97,11 +143,11 @@ const Grades = () => {
                           <td className="px-4 py-2 border-b text-center">{d.courseCredits}.00</td>
                           <td className="px-4 py-2 border-b text-center">{d.enrollmentDate}</td>
                           <td className="px-4 py-2 border-b text-center">{d.grade}</td>
-                          <td className="px-4 py-2 border-b text-center">{d.gradingDate}</td>
+                          <td className="px-4 py-2 border-b text-center">{d.gradingDate === "1970-01-01" ? "Not Graded Yet" : d.gradingDate}</td>
                           <td className="px-4 py-2 border-b text-center">
                             <button
                               className="text-blue-500 hover:text-blue-700"
-                              onClick={() => handleEditStudent(d)}
+                              onClick={() => handleEditCourse(d)}
                             >
                               <FaRegEdit size={20} />
                             </button>
@@ -110,6 +156,16 @@ const Grades = () => {
                       ))}
                     </tbody>
                   </table>
+                  {editModal && (
+                    <EditGradeModal
+                      form={form}
+                      setForm={setForm}
+                      selectedDetails={selectedDetails}
+                      toggleModal={toggleModal}
+                      onSubmit={changeGrade}
+
+                    />
+                  )}
                 </Table>
               </div>
             )}
