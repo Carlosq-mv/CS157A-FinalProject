@@ -78,15 +78,15 @@ const Courses = () => {
 
   return (
     <>
-      <div class="p-7 w-screen flex flex-col items-center">
-        <div class="bg-white card card-compact w-full max-w-7xl shadow-xl">
-          <div class="card-body">
-            <div class="bg-blue-100 p-5 rounded-lg shadow-md mb-6 flex-col text-center">
-              <h1 class="text-3xl font-abril text-blue-800 pb-4">Course Management</h1>
-              <p class="text-lg text-gray-700 mt-2">
+      <div className="p-7 w-screen flex flex-col items-center">
+        <div className="bg-white card card-compact w-full max-w-7xl shadow-xl">
+          <div className="card-body">
+            <div className="bg-blue-100 p-5 rounded-lg shadow-md mb-6 flex-col text-center">
+              <h1 className="text-3xl font-abril text-blue-800 pb-4">Course Management</h1>
+              <p className="text-lg text-gray-700 mt-2">
                 The <strong>Courses Page</strong> provides an intuitive interface to manage course offerings. Here, you can:
               </p>
-              <ul class="text-lg text-gray-700 mt-4 text-left">
+              <ul className="text-lg text-gray-700 mt-4 text-left">
                 <li><strong>View All Courses:</strong> Access a detailed list of available courses, including descriptions and key details.</li>
                 <li><strong>Add New Courses:</strong> Create new course offerings to keep your curriculum updated and relevant.</li>
                 <li><strong>Edit Course Details:</strong> Update course information such as schedules, instructors, or prerequisites.</li>

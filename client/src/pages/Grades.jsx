@@ -5,6 +5,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { PiBooks } from "react-icons/pi";
 import { FaSearch } from "react-icons/fa";
 import EditGradeModal from "../components/modals/EditGradeModal";
+import Alert from "../components/Alert"
 
 // courseName: ""
 // courseSection: ""
@@ -20,6 +21,7 @@ const Grades = () => {
   const [email, setEmail] = useState("")
   const [details, setDetails] = useState()
   const [editModal, setEditModal] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
   const [form, setForm] = useState({
     grade: "",
     gradeId: "",
@@ -37,11 +39,12 @@ const Grades = () => {
     Axios.get(`/api/grade/get-details?studentEmail=${email}`)
       .then((res) => {
         setDetails(res.data)
-        console.log("Student data:", res.data);
-
+        setErrorMessage("")
       })
       .catch((err) => {
         console.error("Error fetching student:", err)
+        setErrorMessage(err.response.data)
+        setDetails(null)
       })
   }
 
@@ -90,7 +93,7 @@ const Grades = () => {
               />
             </figure>
 
-            <div className="sticky top-0  py-4 flex justify-center items-center space-x-2 pb-6">
+            <div className="sticky top-0 py-4 flex justify-center items-center space-x-2 pb-6">
               <input
                 type="text"
                 className="p-2 bg-white rounded border text-black border-gray-300 focus:outline-none focus:ring focus:ring-blue-300 w-full max-w-md"
@@ -110,7 +113,11 @@ const Grades = () => {
                 <FaSearch className="h-5 w-5" />
               </button>
             </div>
-
+            <div className="w-full flex items-center justify-center mt-4">
+              <div className="w-full max-w-md">
+                {errorMessage && (<Alert message={errorMessage}/>)}
+              </div>
+            </div>
 
             {/* Details Table */}
             {details && (
