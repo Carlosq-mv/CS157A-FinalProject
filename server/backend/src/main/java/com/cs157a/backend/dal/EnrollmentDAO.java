@@ -19,12 +19,17 @@ public class EnrollmentDAO {
     // singleton instance for database connection management
     private DBConnection dbConnection = DBConnection.getInstance();
     
-    public boolean enrollmentExists(Long studentId, Long courseId) {
-    	String sql = "SELECT COUNT(*) FROM Enrollments WHERE StudentID = ? AND  CourseID = ?";
+    public boolean enrollmentExists(Long studentId, String courseName) {
+    	String sql = """
+            SELECT COUNT(*) 
+            FROM Enrollments e
+            INNER JOIN Courses c ON e.CourseID = c.CourseID
+            WHERE e.StudentID = ? AND c.CourseName = ?
+        """;
     	 try(PreparedStatement preparedStatement = dbConnection.getMySqlConnection().prepareStatement(sql)) {
     		// Set the query parameters
 	        preparedStatement.setLong(1, studentId);
-	        preparedStatement.setLong(2, courseId);
+	        preparedStatement.setString(2, courseName);
 	        
 	        // Execute the query
 	        try (ResultSet resultSet = preparedStatement.executeQuery()) {

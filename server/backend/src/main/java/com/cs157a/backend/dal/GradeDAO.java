@@ -99,7 +99,7 @@ public class GradeDAO {
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setLong(1, grade.getEnrollmentId());
                 ps.setString(2, grade.getGrade());
-                ps.setDate(3, Date.valueOf(grade.getGradingDate()));
+                ps.setDate(3, Date.valueOf(LocalDate.now()));
                 ps.setLong(4, grade.getGradeId());
                 ps.executeUpdate();  
             } 
@@ -194,6 +194,7 @@ public class GradeDAO {
             WHERE
                 Students.Email = ?                     -- Filter to fetch details for a specific student based on their email
             ORDER BY
+                Grades.Grade,
                 Courses.CourseName,                    -- Order results alphabetically by course name
                 Courses.Section;                       -- Then order by section within the same course
         """;

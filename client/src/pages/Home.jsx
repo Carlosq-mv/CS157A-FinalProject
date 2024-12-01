@@ -1,10 +1,32 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { FaCircleUser } from "react-icons/fa6";
 import { PiBookOpenTextLight } from "react-icons/pi";
 import { IoStatsChart } from "react-icons/io5";
+import Axios from "../constants/api"
 
 const Home = () => {
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(false)
+
+  const getStats = () => {
+    setLoading(true)
+    Axios.get("/api/home/details")
+      .then(res => {
+        console.log(res)
+        setData(res.data)
+      })
+
+      .catch(err => {
+        console.log(err)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }
+  useEffect(() => {
+    getStats()
+  }, [])
   return (
     <>
       <div className="p-7 w-screen items-center flex-col flex">
@@ -24,40 +46,32 @@ const Home = () => {
                 className="h-[34rem] w-auto object-contain "
               />
             </figure>
-
-            <div className="flex justify-around items-center h-full">
-
-              <div className="flex flex-col items-center">
-                <span className="text-lg text-black font-black pb-6">Total Students:</span>
-                <FaCircleUser className="text-8xl text-black pb-6" />
+            {!loading ? (
+              <div className="flex justify-around items-center h-full">
+                <div className="flex flex-col items-center">
+                  <span className="text-lg text-black font-black pb-6">Total Students</span>
+                  <FaCircleUser className="text-8xl text-black pb-6" />
+                  <span className="text-lg text-black font-black pb-6">{data?.students || 0}</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <span className="text-lg text-black font-black pb-6">Total Courses</span>
+                  <PiBookOpenTextLight className="text-8xl text-black pb-6" />
+                  <span className="text-lg text-black font-black pb-6">{data?.courses || 0}</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <span className="text-lg text-black font-black pb-6">Total Enrollments</span>
+                  <IoStatsChart className="text-8xl text-black pb-6" />
+                  <span className="text-lg text-black font-black pb-6">{data?.enrollments || 0}</span>
+                </div>
               </div>
-              <div className="flex flex-col items-center">
-                <span className="text-lg text-black font-black pb-6">Total Courses:</span>
-                <PiBookOpenTextLight className="text-8xl text-black pb-6" />
+            ) : (
+              <div className="flex justify-around items-center h-full">
+                <span className="loading loading-lg loading-spinner text-secondary"></span>
               </div>
-              <div className="flex flex-col items-center">
-                <span className="text-lg text-black font-black pb-6">Stats</span>
-                <IoStatsChart className="text-8xl text-black pb-6" />
-              </div>
-            </div>
-
+            )}
           </div>
         </div>
       </div>
-
-      {/* <div className="w-screen flex">
-        <div className="card card-compact w-full">
-          <figure>
-            <img
-              src="/images/library.jpg"
-              alt="Library"
-              className="h-96 w-auto rounded-xl shadow-xl"
-            />
-          </figure>
-
-        </div>
-      </div> */}
-
     </>
   )
 }
