@@ -105,11 +105,11 @@ const StudentsTable = ({ students, getStudentRecords }) => {
       <table style={{ width: "100%", borderCollapse: "collapse", color: "black" }}>
         <thead>
           <tr style={{ backgroundColor: "#f1f1f1", textAlign: "left" }}>
-            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>StudentID</th>
-            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Name</th>
-            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Date Of Birth</th>
-            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Email</th>
-            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Phone</th>
+            <th style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>StudentID</th>
+            <th style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>Name</th>
+            <th style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>Date Of Birth</th>
+            <th style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>Email</th>
+            <th style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>Phone</th>
             <th style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>Action</th>
           </tr>
         </thead>
@@ -117,11 +117,11 @@ const StudentsTable = ({ students, getStudentRecords }) => {
           {students && students.length > 0 ? (
             students.map((student, index) => (
               <tr key={index}>
-                <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{student.studentId}</td>
-                <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{student.name}</td>
-                <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{student.dateOfBirth}</td>
-                <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{student.email}</td>
-                <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{student.phoneNum}</td>
+                <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>{student.studentId}</td>
+                <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>{student.name}</td>
+                <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>{student.dateOfBirth}</td>
+                <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>{student.email}</td>
+                <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>{student.phoneNum}</td>
                 <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>
                   <button
                     style={{ background: "transparent", border: "none", cursor: "pointer", margin: "0 5px", color: "#007bff" }}
