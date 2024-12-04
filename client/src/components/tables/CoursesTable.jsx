@@ -100,9 +100,9 @@ const CoursesTable = ({ courses, getCourseRecords }) => {
       <table style={{ width: "100%", borderCollapse: "collapse", color: "black" }}>
         <thead>
           <tr style={{ backgroundColor: "#f1f1f1", textAlign: "left" }}>
-            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Course</th>
-            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Section</th>
-            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Credits</th>
+            <th style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>Course</th>
+            <th style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>Section</th>
+            <th style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>Credits</th>
             <th style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>Action</th>
           </tr>
         </thead>
@@ -110,9 +110,9 @@ const CoursesTable = ({ courses, getCourseRecords }) => {
           {courses && courses.length > 0 ? (
             courses.map((course, index) => (
               <tr key={index}>
-                <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{(course.courseName).toUpperCase()}</td>
-                <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{course.section}</td>
-                <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{course.credits + ".00"}</td>
+                <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center"}}>{(course.courseName).toUpperCase()}</td>
+                <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>{course.section}</td>
+                <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>{course.credits + ".00"}</td>
                 <td style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "center" }}>
                   <button
                     style={{ background: "transparent", border: "none", cursor: "pointer", margin: "0 5px", color: "#007bff" }}

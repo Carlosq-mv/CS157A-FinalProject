@@ -9,7 +9,9 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.cs157a.backend.config.DBConnection;
+import com.cs157a.backend.dto.CourseDetails;
 import com.cs157a.backend.model.Course;
+import com.cs157a.backend.model.Student;
 
 @Repository
 public class CourseDAO {
@@ -131,30 +133,63 @@ public class CourseDAO {
         return false;
     }
 
-    public Course getRecordById(Long courseId) {
-        // sql query
-        String sql = "SELECT * FROM Courses WHERE CourseID = ?";
+    public CourseDetails getRecordById(Long courseId) {
+    // SQL query to fetch course details along with enrollment information
+    String sql = """
+        SELECT 
+            c.CourseID,
+            c.CourseName,
+            c.Section,
+            c.Credits,
+            s.StudentID,
+            s.Name AS StudentName,
+            s.Email AS StudentEmail
+        FROM 
+            Courses c
+        LEFT JOIN 
+            Enrollments e ON c.CourseID = e.CourseID
+        LEFT JOIN 
+            Students s ON e.StudentID = s.StudentID
+        WHERE 
+            c.CourseID = ?
+        ORDER BY 
+            e.EnrollmentDate;
+    """;
 
-        try (PreparedStatement preparedStatement = dbConnection.getMySqlConnection().prepareStatement(sql)) {
-            preparedStatement.setLong(1, courseId);
-            
-            // execute query
-            ResultSet resultSet = preparedStatement.executeQuery();
-            
-            // check if result is found
-            if (resultSet.next()) {
-                // map results to a Course object
+    try (PreparedStatement preparedStatement = dbConnection.getMySqlConnection().prepareStatement(sql)) {
+        preparedStatement.setLong(1, courseId);
+
+        // Execute query
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        CourseDetails courseDetails = null;
+        List<Student> students = new ArrayList<>();
+
+        while (resultSet.next()) {
+            // Map course details only once
+            if (courseDetails == null) {
                 Long cId = resultSet.getLong("CourseID");
                 String name = resultSet.getString("CourseName");
                 int section = resultSet.getInt("Section");
                 int credits = resultSet.getInt("Credits");
-                
-                // return the Course object
-                return new Course(cId, name, section, credits);
+                courseDetails = new CourseDetails(cId, name, section, credits, students);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+            // Map student details
+            Long studentId = resultSet.getLong("StudentID");
+            if (studentId != 0) { // Check if student exists
+                String studentName = resultSet.getString("StudentName");
+                String studentEmail = resultSet.getString("StudentEmail");
+                students.add(new Student(studentId, studentName, studentEmail));
+            }
         }
-        return null;
+
+        return courseDetails;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+
+    return null;
+}
+
 }

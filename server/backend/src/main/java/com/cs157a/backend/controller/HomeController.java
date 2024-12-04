@@ -1,6 +1,7 @@
 package com.cs157a.backend.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cs157a.backend.dal.HomeDAO;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 @RestController
 @RequestMapping("/api/home")
@@ -42,4 +45,8 @@ public class HomeController {
 
     }
 
+    @PostMapping("/search")
+    public ResponseEntity<?> searchCourse(@RequestParam String course) {
+        return ResponseEntity.ok(homeDAO.getCourse(course));
+    }
 }

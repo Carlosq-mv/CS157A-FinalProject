@@ -8,6 +8,7 @@ import Courses from "./pages/Courses";
 import Enrollments from "./pages/Enrollments";
 import Grades from "./pages/Grades";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import Course from "./pages/Course";
 import { Navigate } from "react-router-dom";
 
 // all routes used in web app lie here
@@ -24,6 +25,7 @@ function App() {
             <Route path="/courses" element={<Courses />} />
             <Route path="/enrollments" element={<Enrollments />} />
             <Route path="/grades" element={<Grades />} />
+            <Route path="/course/:courseId" element={<Course />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/login" />} />

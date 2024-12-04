@@ -12,6 +12,12 @@ public class Student {
     public Student() {
     }
 
+    public Student(Long studentId, String name, String email) {
+        this.studentId = studentId;
+        this.name = name;
+        this.email = email;
+    }
+
     public Student(Long studentId, String name, LocalDate dateOfBirth, String email, String phoneNum) {
         this.studentId = studentId;
         this.name = name;
@@ -62,10 +68,10 @@ public class Student {
 
     @Override
     public String toString() {
-        return "<StudentId: " + getStudentId() + 
-               " Name: " + getName() + 
-               " DateOfBirth: " + getDateOfBirth() + 
-               " Email: "  + getEmail() + 
-               " Phone: " + getPhoneNum() + ">";
+        return "<StudentId: " + getStudentId() +
+                " Name: " + getName() +
+                " DateOfBirth: " + getDateOfBirth() +
+                " Email: " + getEmail() +
+                " Phone: " + getPhoneNum() + ">";
     }
 }
