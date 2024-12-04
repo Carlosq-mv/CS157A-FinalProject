@@ -79,7 +79,7 @@ public class GradeController {
         }
         // check if the student exists
         if(!studentDAO.exists(studentEmail)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student does not exist.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student does not exist. Please try again.");
         }
 
         // get all the grading info
