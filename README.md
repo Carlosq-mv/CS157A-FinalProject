@@ -30,7 +30,7 @@ Before starting, ensure you have the following installed on your system:
 - **NOTE**: In our Spring Boot application, the `application.properties` file contains hardcoded `username` and `password` set to `root` and `3000`. Feel free to change these values as per your requirements.
 - Log into your MySQL server: `mysql -u root -p`
 - Create the database: `create database StudentManagementSyst`
-- **Note**: The schema is automatically initialized when the project is run. The above below is optional if you prefer to manually set up the database
+- **Note**: The schema is automatically initialized when the project is run. The step below is optional if you prefer to manually set up the database
 - **Optional**: To create the schema and prepopulate the database, run the following commands in a terminal window at the root of this project:
 ```shell
     # create the schema
