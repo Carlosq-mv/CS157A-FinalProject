@@ -1,29 +1,68 @@
-# CS157A-FinalProject
-### Final Project for Intro to DBMS course
+# Student Center: A Student Management System 
 
 # Getting Started
+### Prerequisites 
+Before starting, ensure you have the following installed on your system:
 
-### Reference Documentation
-For further reference, please consider the following sections:
+1. **[MySQL Server](https://dev.mysql.com/downloads/mysql/):**
+   - Required for database management and handling backend data storage.
+   - [Installation Guide for MySQL](https://dev.mysql.com/doc/refman/8.0/en/installing.html).
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/3.3.5/maven-plugin)
-* [Create an OCI image](https://docs.spring.io/spring-boot/3.3.5/maven-plugin/build-image.html)
-* [JDBC API](https://docs.spring.io/spring-boot/3.3.5/reference/data/sql.html)
-* [Spring Web](https://docs.spring.io/spring-boot/3.3.5/reference/web/servlet.html)
+2. **[Java Development Kit (JDK)](https://www.oracle.com/java/technologies/downloads/):**
+   - Necessary for running Java-based applications and tools.
+   - Recommended version: JDK 17 or above.
+   - [Installation Guide for Java](https://docs.oracle.com/en/java/javase/17/install/overview-jdk-installation.html).
+3. **[Node.js](https://nodejs.org/):**
+   - Required for building and running the React frontend.
+   - Recommended version: LTS (Long-Term Support) version.
+   - [Installation Guide for Node.js](https://nodejs.org/en/download/).
 
-### Guides
-The following guides illustrate how to use some features concretely:
 
-* [Accessing Relational Data using JDBC with Spring](https://spring.io/guides/gs/relational-data-access/)
-* [Managing Transactions](https://spring.io/guides/gs/managing-transactions/)
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
 
-### Maven Parent overrides
+### Next Steps
+#### Clone Repo
+- Once all the prerequisites are installed, clone this repository:
+```shell
+    git clone https://github.com/Carlosq-mv/CS157A-FinalProject.git
+```
 
-Due to Maven's design, elements are inherited from the parent POM to the project POM.
-While most of the inheritance is fine, it also inherits unwanted elements like `<license>` and `<developers>` from the parent.
-To prevent this, the project POM contains empty overrides for these elements.
-If you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.
+#### Database Setup
+- **NOTE**: In our Spring Boot application, the `application.properties` file contains hardcoded `username` and `password` set to `root` and `3000`. Feel free to change these values as per your requirements.
+- Log into your MySQL server: `mysql -u root -p`
+- Create the database: `create database StudentManagementSyst`
+- **Note**: The schema is automatically initialized when the project is run. The step below is optional if you prefer to manually set up the database
+- **Optional**: To create the schema and prepopulate the database, run the following commands in a terminal window at the root of this project:
+```shell
+    # create the schema
+    $ mysql -u root -p StudentManagementSyst  < create_schema.sql  
+
+    # populate the tables
+    $ mysql -u root -p StudentManagementSyst  < initialize_data.sql
+``` 
+#### Running Backend
+- Open a new terminal window
+```shell
+    # Navigate to the root of the server folder
+    $ cd server/backend
+
+    # Run the Spring Boot project
+    $ ./mvnw spring-boot:run 
+```
+- **Alternatively**, if you are using an IDE run the program directly from the BackendApplication file by selecting the Run option.
+
+#### Running Frontend
+- Open a new terminal window
+```shell
+    # Navigate to the client folder
+    $ cd client
+
+    # Install all necessary dependencies
+    $ npm install
+
+    # Run the React application
+    $ npm run dev
+```
+- Open your favorite browser and navigate to: `localhost:5173` or `http://localhost:5173/`
+
+# Final Notes
+- Once both the backend and frontend servers are running, the application will be fully functional and accessible for use.
