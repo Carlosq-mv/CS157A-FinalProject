@@ -26,13 +26,20 @@ public class GradeController {
 
     @PostMapping("/add-grade")
     public ResponseEntity<?> addGrade(@RequestBody Grade grade) {
+        // check if there is a reques body
+        if(grade == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No request body found");
+        }
+        // add the grade to database
         gradeDAO.addRecord(grade);
         return ResponseEntity.status(HttpStatus.CREATED).body(grade);
     }
 
     @GetMapping("/all-grades")
     public ResponseEntity<?> getGrades() {
+        // get a list of the grades
         List<Grade> grades = gradeDAO.getRecords();
+        // check if the list is empty
         if (!grades.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(grades);
         } else {

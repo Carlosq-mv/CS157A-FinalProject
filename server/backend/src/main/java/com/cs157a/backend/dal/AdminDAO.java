@@ -1,5 +1,6 @@
 package com.cs157a.backend.dal;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,19 +37,43 @@ public class AdminDAO {
     }
 
     public Admin createAdmin(Admin admin) {
-        // sql query
+        // sql statement to insert a new admin record
         String sql = "INSERT INTO Administrators (Password, AdministratorID) VALUES (?, ?)";
-        Admin a;
-        try (PreparedStatement stmt = dbConnection.getMySqlConnection().prepareStatement(sql)) {
-            stmt.setString(1, admin.getPassword()); // Set the password
-            stmt.setLong(2, admin.getAdminId()); // Set the username
-            stmt.executeUpdate();
+        Admin a = null;
+        Connection conn = null;
+
+        try {
+            conn = dbConnection.getMySqlConnection();
+            conn.setAutoCommit(false);
+
+            // execute the sql statement
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, admin.getPassword()); // set the password
+                ps.setLong(2, admin.getAdminId());  // set the admin id
+                ps.executeUpdate();
+            }
+            // commit sql transaction
+            conn.commit();
             a = new Admin(admin.getAdminId(), admin.getPassword());
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
+            if (conn != null) {
+                try {
+                    // try to roll back in case of errors
+                    conn.rollback();
+                } catch (SQLException re) {
+                    System.err.println(re.getMessage());
+                }
+            }
+        } finally {
+            if (conn != null) {
+                try {
+                    // try to roll back in case of errors
+                    conn.setAutoCommit(true);
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            } 
+        } 
         return a;
     }
-
 }

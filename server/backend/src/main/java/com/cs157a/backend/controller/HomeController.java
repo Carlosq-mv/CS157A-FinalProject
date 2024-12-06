@@ -22,11 +22,13 @@ public class HomeController {
     @Autowired
     private HomeDAO homeDAO;
 
+    // get all important stats to display in the home page 
     @GetMapping("/details")
     public ResponseEntity<?> getDetails() {
         int courses = 0, enrollments = 0, students = 0;
         Map<String, Integer> map = new HashMap<>();
 
+        // get the count of courses, enrollment, & students 
         try {
             courses = homeDAO.getDetails("Courses");
             enrollments = homeDAO.getDetails("Enrollments");
@@ -37,16 +39,22 @@ public class HomeController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(re.getMessage());
         }
 
+        // add the stats to a hashmap and return that
         map.put("courses", courses);
         map.put("enrollments", enrollments);
         map.put("students", students);
 
         return ResponseEntity.ok(map);
-
     }
 
+    // search for a course by course name
     @PostMapping("/search")
     public ResponseEntity<?> searchCourse(@RequestParam String course) {
+        if (course == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No URL path set.");
+        }
+
+        // get a list of all courses that match the 'course' string 
         return ResponseEntity.ok(homeDAO.getCourse(course));
     }
 }

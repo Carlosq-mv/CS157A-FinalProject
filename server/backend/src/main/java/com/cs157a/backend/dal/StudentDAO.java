@@ -1,5 +1,6 @@
 package com.cs157a.backend.dal;
 
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -46,45 +47,126 @@ public class StudentDAO {
     }
 
     public void addRecord(Student student) {
-        // sql query
+        // sql statement to insert a student record
         String sql = "INSERT INTO Students (Name, DateOfBirth, Email, Phone) VALUES (?, ?, ?, ?)";
+        Connection conn = null;
 
-        try (PreparedStatement preparedStatement = dbConnection.getMySqlConnection().prepareStatement(sql)) {
-            preparedStatement.setString(1, student.getName());
-            preparedStatement.setDate(2, Date.valueOf(student.getDateOfBirth()));
-            preparedStatement.setString(3, student.getEmail());
-            preparedStatement.setString(4, student.getPhoneNum());
-            preparedStatement.executeUpdate();
+        try {
+            conn = dbConnection.getMySqlConnection();
+            conn.setAutoCommit(false);
+
+            // execute sql statement
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, student.getName());
+                ps.setDate(2, Date.valueOf(student.getDateOfBirth()));
+                ps.setString(3, student.getEmail());
+                ps.setString(4, student.getPhoneNum());
+                ps.executeUpdate(); 
+            }
+
+            // commit
+            conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
+            // check if there is a connection
+            if (conn != null) {
+                try {
+                    // try to rollback transaction if an error occurs
+                    conn.rollback();
+                } catch (SQLException re) {
+                    System.err.println(re.getMessage());
+                }
+            }
+        } finally {
+            if (conn != null) {
+                try {
+                    // set auto comit back to true
+                    conn.setAutoCommit(true); 
+                } catch (SQLException ex) {
+                    System.err.println(ex.getMessage());
+                }
+            }
         }
     }
 
     public void updateRecord(Student student) {
-        // sql query
+        // sql statement to update student record
         String sql = "UPDATE Students SET Name = ?, DateOfBirth = ?, Email = ?, Phone = ? WHERE StudentID = ?";
+        Connection conn = null;
 
-        try (PreparedStatement preparedStatement = dbConnection.getMySqlConnection().prepareStatement(sql)) {
-            preparedStatement.setString(1, student.getName());
-            preparedStatement.setDate(2, Date.valueOf(student.getDateOfBirth()));
-            preparedStatement.setString(3, student.getEmail());
-            preparedStatement.setString(4, student.getPhoneNum());
-            preparedStatement.setLong(5, student.getStudentId());
-            preparedStatement.executeUpdate();
+        try {
+            conn = dbConnection.getMySqlConnection();
+            conn.setAutoCommit(false);
+
+            // execute sql statement
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, student.getName());
+                ps.setDate(2, Date.valueOf(student.getDateOfBirth()));
+                ps.setString(3, student.getEmail());
+                ps.setString(4, student.getPhoneNum());
+                ps.setLong(5, student.getStudentId());
+                ps.executeUpdate();
+            }
+
+            // commit
+            conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
+            // check if there is a connection
+            if (conn != null) {
+                try {
+                    // try to rollback transaction if an error occurs
+                    conn.rollback();
+                } catch (SQLException re) {
+                    System.err.println(re.getMessage());
+                }
+            }
+        } finally {
+            if (conn != null) {
+                try {
+                    // set auto comit back to true
+                    conn.setAutoCommit(true); 
+                } catch (SQLException ex) {
+                    System.err.println(ex.getMessage());
+                }
+            }
         }
     }
 
     public void deleteRecord(Long studentId) {
-        // sql query
+        // sql statement to delete a record
         String sql = "DELETE FROM Students WHERE StudentID = ?";
+        Connection conn = null;
 
-        try (PreparedStatement preparedStatement = dbConnection.getMySqlConnection().prepareStatement(sql)) {
-            preparedStatement.setLong(1, studentId);
-            preparedStatement.executeUpdate();
+        try {
+            conn = dbConnection.getMySqlConnection();
+            conn.setAutoCommit(false);
+
+            // execute sql statement
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setLong(1, studentId);
+                ps.executeUpdate();
+            }
+
+            // commit
+            conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
+            // check if there is a connection
+            if (conn != null) {
+                try {
+                    // try to rollback transaction if an error occurs
+                    conn.rollback();
+                } catch (SQLException re) {
+                    System.err.println(re.getMessage());
+                }
+            }
+        } finally {
+            if (conn != null) {
+                try {
+                    // set auto comit back to true
+                    conn.setAutoCommit(true); 
+                } catch (SQLException ex) {
+                    System.err.println(ex.getMessage());
+                }
+            }
         }
     }
 

@@ -40,6 +40,7 @@ public class DBConnection {
         createTable(Constants.GRADES_TABLE);     
     }
 
+    // helper function for creating tables
     private void createTable(String sql) {
         try (Statement statement = getMySqlConnection().createStatement()) {
             statement.execute(sql);

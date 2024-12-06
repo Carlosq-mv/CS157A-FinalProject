@@ -12,6 +12,7 @@ import com.cs157a.backend.dal.CourseDAO;
 import com.cs157a.backend.dal.EnrollmentDAO;
 import com.cs157a.backend.dal.GradeDAO;
 import com.cs157a.backend.dal.StudentDAO;
+import com.cs157a.backend.dto.EnrollmentDetails;
 import com.cs157a.backend.dto.EnrollmentForm;
 import com.cs157a.backend.model.Course;
 import com.cs157a.backend.model.Enrollment;
@@ -40,6 +41,14 @@ public class EnrollmentController {
 
     @GetMapping("/enrollment-details")
     public ResponseEntity<?> getEnrollmentDetails(@RequestParam(required = false) String param) {
+        // get the list of important enrollment details
+        List<EnrollmentDetails> list = enrollmentDAO.getEnrollmentDetails();
+
+        // check if there is enrolllment details
+        if(list == null || list.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No enrollment details found.");
+        }
+
         return ResponseEntity.status(200).body(enrollmentDAO.getEnrollmentDetails());
     }
     

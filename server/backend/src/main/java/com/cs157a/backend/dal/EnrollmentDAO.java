@@ -1,9 +1,9 @@
 package com.cs157a.backend.dal;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -116,50 +116,118 @@ public class EnrollmentDAO {
     // Add a new enrollment
     public void addRecord(Enrollment enrollment) {
         String sql = "INSERT INTO Enrollments (StudentID, CourseID, EnrollmentDate) VALUES (?, ?, ?)";
+        Connection conn = null;
 
-        try (PreparedStatement preparedStatement = dbConnection.getMySqlConnection().prepareStatement(sql,Statement.RETURN_GENERATED_KEYS )) {
-            preparedStatement.setLong(1, enrollment.getStudentId());
-            preparedStatement.setLong(2, enrollment.getCourseId());
-            preparedStatement.setDate(3, java.sql.Date.valueOf(enrollment.getEnrollmentDate()));
-            preparedStatement.executeUpdate();
+        try {
+            // establish a database connection
+            conn = dbConnection.getMySqlConnection();
+            conn.setAutoCommit(false);
 
-            // check if there is a generate key
-            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                // get the enrollment id of the new tuple inserted in database
-                Long enrollmentId = generatedKeys.getLong(1);
-                // set the enrollment it to the enrollment object
-                enrollment.setEnrollmentId(enrollmentId);;
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setLong(1, enrollment.getStudentId());
+                ps.setLong(2, enrollment.getCourseId());
+                ps.setDate(3, java.sql.Date.valueOf(enrollment.getEnrollmentDate()));
+                ps.executeUpdate();  
             }
+            // commit the transaction
+            conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
+            // check if there is a connection present
+            if (conn != null) {
+                try {
+                    // try to roll back the transaction
+                    conn.rollback();
+                } catch (SQLException re) {
+                    System.err.println(re.getMessage());
+                }
+            }
+        } finally {
+            if (conn != null) {
+                try {
+                    // set auto comit back to true
+                    conn.setAutoCommit(true); 
+                } catch (SQLException ex) {
+                    System.err.println(ex.getMessage());
+                }
+            }
         }
     }
 
     // Update an existing enrollment
     public void updateRecord(Enrollment enrollment) {
+        // sql statement to update an enrollment record
         String sql = "UPDATE Enrollments SET StudentID = ?, CourseID = ?, EnrollmentDate = ? WHERE EnrollmentID = ?";
+        Connection conn = null;
 
-        try (PreparedStatement preparedStatement = dbConnection.getMySqlConnection().prepareStatement(sql)) {
-            preparedStatement.setLong(1, enrollment.getStudentId());
-            preparedStatement.setLong(2, enrollment.getCourseId());
-            preparedStatement.setDate(3, java.sql.Date.valueOf(enrollment.getEnrollmentDate()));
-            preparedStatement.setLong(4, enrollment.getEnrollmentId());
-            preparedStatement.executeUpdate();
+        try {
+            // get the database connection
+            conn = dbConnection.getMySqlConnection();
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setLong(1, enrollment.getStudentId());
+                ps.setLong(2, enrollment.getCourseId());
+                ps.setDate(3, java.sql.Date.valueOf(enrollment.getEnrollmentDate()));
+                ps.setLong(4, enrollment.getEnrollmentId());
+                ps.executeUpdate();   
+            }
+            // commit to database
+            conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            // check if there is a connection
+            if (conn != null) {
+                try {
+                    // try to roll back transaction
+                    conn.rollback();
+                } catch (SQLException re) {
+                    System.err.println(re.getMessage());
+                }
+            }
+        } finally {
+            if (conn != null) {
+                try {
+                    // set auto commit back to true
+                    conn.setAutoCommit(true);
+                } catch (SQLException ex) {
+                    System.err.println(ex.getMessage());
+                }
+            }
+        } 
     }
 
     // Delete an enrollment
     public void deleteRecord(Long enrollmentId) {
         String sql = "DELETE FROM Enrollments WHERE EnrollmentID = ?";
+        Connection conn = null;
+        
+        try {
+            conn = dbConnection.getMySqlConnection();
+            conn.setAutoCommit(false);
 
-        try (PreparedStatement preparedStatement = dbConnection.getMySqlConnection().prepareStatement(sql)) {
-            preparedStatement.setLong(1, enrollmentId);
-            preparedStatement.executeUpdate();
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setLong(1, enrollmentId);
+                ps.executeUpdate(); 
+            }
+            conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
+            // check if there is a connection
+            if (conn != null) {
+                try {
+                    // try to rollback transaction if an error occurs
+                    conn.rollback();
+                } catch (SQLException re) {
+                    System.err.println(re.getMessage());
+                }
+            }
+        } finally {
+            if (conn != null) {
+                try {
+                    // set auto comit back to true
+                    conn.setAutoCommit(true); 
+                } catch (SQLException ex) {
+                    System.err.println(ex.getMessage());
+                }
+            }
         }
     }
 
