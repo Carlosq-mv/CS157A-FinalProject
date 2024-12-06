@@ -18,21 +18,21 @@ INSERT INTO Administrators (Password) VALUES
 
 -- Insert sample data into Students table
 INSERT INTO Students (Name, DateOfBirth, Email, Phone) VALUES
-('John', '2000-05-12', 'john@email.com', '1234567890'),
-('Jane', '2001-08-20', 'jane@email.com', '2345678901'),
-('Michael', '2003-11-15', 'michael@email.com', '3456789012'),
-('Emily', '2002-02-25', 'emily@email.com', '4567890123'),
-('James', '2001-03-10', 'james@email.com', '5678901234'),
-('Patricia', '2001-07-30', 'patricia@email.com', '6789012345'),
-('Robert', '2002-05-06', 'robert@email.com', '7890123456'),
-('Taylor', '2000-12-11', 'linda@email.com', '8901234567'),
-('William', '2002-04-18', 'william@email.com', '9012345678'),
-('David', '2004-01-03', 'david@email.com', '0123456789'),
-('Susan', '2005-09-21', 'susan@email.com', '1234509876'),
-('Joseph', '2005-11-12', 'joseph@email.com', '2345612345'),
-('Sarah', '2003-12-05', 'sarah@email.com', '3456723456'),
-('Daniel', '2002-06-20', 'daniel@email.com', '4567834567'),
-('Jessica', '2001-02-27', 'jessica@email.com', '5678945678');
+('John', '2000-05-12', 'john@email.com', '123-456-7890'),
+('Jane', '2001-08-20', 'jane@email.com', '234-567-8901'),
+('Michael', '2003-11-15', 'michael@email.com', '345-678-9012'),
+('Emily', '2002-02-25', 'emily@email.com', '456-789-0123'),
+('James', '2001-03-10', 'james@email.com', '567-890-1234'),
+('Patricia', '2001-07-30', 'patricia@email.com', '678-901-2345'),
+('Robert', '2002-05-06', 'robert@email.com', '789-012-3456'),
+('Taylor', '2000-12-11', 'linda@email.com', '890-123-4567'),
+('William', '2002-04-18', 'william@email.com', '901-234-5678'),
+('David', '2004-01-03', 'david@email.com', '012-345-6789'),
+('Susan', '2005-09-21', 'susan@email.com', '123-450-9876'),
+('Joseph', '2005-11-12', 'joseph@email.com', '234-561-2345'),
+('Sarah', '2003-12-05', 'sarah@email.com', '345-672-3456'),
+('Daniel', '2002-06-20', 'daniel@email.com', '456-783-4567'),
+('Jessica', '2001-02-27', 'jessica@email.com', '567-894-5678');
 
 -- Insert sample data into Courses table
 INSERT INTO Courses (CourseName, Section, Credits) VALUES
