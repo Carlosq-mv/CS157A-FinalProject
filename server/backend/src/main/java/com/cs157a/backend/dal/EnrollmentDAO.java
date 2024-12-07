@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -123,11 +124,20 @@ public class EnrollmentDAO {
             conn = dbConnection.getMySqlConnection();
             conn.setAutoCommit(false);
 
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setLong(1, enrollment.getStudentId());
                 ps.setLong(2, enrollment.getCourseId());
                 ps.setDate(3, java.sql.Date.valueOf(enrollment.getEnrollmentDate()));
                 ps.executeUpdate();  
+
+                // check if there is a generate key
+                ResultSet generatedKeys = ps.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    // get the enrollment id of the new tuple inserted in database
+                    Long enrollmentId = generatedKeys.getLong(1);
+                    // set the enrollment it to the enrollment object
+                    enrollment.setEnrollmentId(enrollmentId);;
+                }
             }
             // commit the transaction
             conn.commit();
